@@ -1,0 +1,22 @@
+# Configuration for automatically generated release notes
+
+changelog:
+  exclude:
+    labels:
+      - dependencies
+  categories:
+    - title: 🚀 New Features
+      labels:
+        - enhancement
+    - title: 🛠 Fixes
+      labels:
+        - fix
+    - title: 📖 Documentation
+      labels:
+        - documentation
+    - title: 🌐 Localization
+      labels:
+        - i18n
+    - title: 🔍 Other Changes
+      labels:
+        - '*'
