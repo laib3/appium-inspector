@@ -54,6 +54,7 @@ for (const serverName of _.keys(ServerTypes)) {
   server[serverName] = {};
 }
 
+// HEREHEREHERE
 // Make sure there's always at least one cap
 const INITIAL_STATE = {
   savedSessions: [],
@@ -116,6 +117,8 @@ const isAttachSessIdValid = (runningSessions, attachSessId) => {
   return false;
 };
 
+// this is a reducer, i.e. a pure function which updates (a copy of) the state 
+// based on the type of action and the current state
 export default function session(state = INITIAL_STATE, action) {
   switch (action.type) {
     case NEW_SESSION_REQUESTED:

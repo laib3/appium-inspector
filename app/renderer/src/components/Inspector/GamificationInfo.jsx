@@ -1,18 +1,18 @@
 import {Col, Row, Table} from 'antd';
 import React, {useEffect, useRef, useState} from 'react';
 
-import {SESSION_INFO_PROPS, SESSION_INFO_TABLE_PARAMS} from '../../constants/session-info';
+import {GAMIFICATION_INFO_PROPS, GAMIFICATION_INFO_TABLE_PARAMS} from '../../constants/gamification';
 import InspectorStyles from './Inspector.module.css';
 import SessionCodeBox from './SessionCodeBox.jsx';
 
 let getSessionData;
 
-const SessionInfo = (props) => {
+const GamificationInfo = (props) => {
   const {driver, t} = props;
 
-  const sessionArray = Object.keys(SESSION_INFO_PROPS).map((key) => [
+  const sessionArray = Object.keys(GAMIFICATION_INFO_PROPS).map((key) => [
     key,
-    String(SESSION_INFO_PROPS[key]),
+    String(GAMIFICATION_INFO_PROPS[key]),
   ]);
 
   const generateSessionTime = () => {
@@ -44,7 +44,7 @@ const SessionInfo = (props) => {
       {
         dataIndex: keyName,
         key: keyName,
-        ...(outerTable && {width: SESSION_INFO_TABLE_PARAMS.COLUMN_WIDTH}),
+        ...(outerTable && {width: GAMIFICATION_INFO_TABLE_PARAMS.COLUMN_WIDTH}),
       },
       {
         dataIndex: keyValue,
@@ -82,7 +82,7 @@ const SessionInfo = (props) => {
         pagination={false}
         showHeader={false}
         size="small"
-        scroll={{y: SESSION_INFO_TABLE_PARAMS.SCROLL_DISTANCE_Y}}
+        scroll={{y: GAMIFICATION_INFO_TABLE_PARAMS.SCROLL_DISTANCE_Y}}
       />
     );
   };
@@ -118,13 +118,13 @@ const SessionInfo = (props) => {
       case 'Server Details':
         return getTable(
           [...serverDetailsArray, ...serverStatusArray],
-          SESSION_INFO_TABLE_PARAMS.SERVER_KEY,
+          GAMIFICATION_INFO_TABLE_PARAMS.SERVER_KEY,
           false,
         );
       case 'Session Length':
         return time;
       case 'Session Details':
-        return getTable(sessionArray, SESSION_INFO_TABLE_PARAMS.SESSION_KEY, false);
+        return getTable(sessionArray, GAMIFICATION_INFO_TABLE_PARAMS.SESSION_KEY, false);
       case 'Currently Active App ID':
         return appId;
       default:
@@ -144,10 +144,16 @@ const SessionInfo = (props) => {
       setTime(generateSessionTime());
     }, 1000);
 
-    return () => clearInterval(interval.current);
-  }, []);
+    return () => clearInterval(interval.current); // cleanup
+  }, []); 
+  /* 
+  	useEffect: connect to an external system (i.e. anything which is not managed by react itself)
+  	arguments = 
+	[1] a setup function which connects to the external system and returns a cleanup function
+	[2] a list of dependencies including every value which is used inside the functions
+  */
 
-  return getTable(sessionArray, SESSION_INFO_TABLE_PARAMS.OUTER_KEY, true);
+  return getTable(sessionArray, GAMIFICATION_INFO_TABLE_PARAMS.OUTER_KEY, true);
 };
 
-export default SessionInfo;
+export default GamificationInfo;
