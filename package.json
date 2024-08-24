@@ -30,6 +30,7 @@
     "test:integration": "cross-env BUILD_BROWSER=1 E2E_TIMEOUT=600000 NODE_ENV=test RUNNING_IN_SPECTRON=true mocha --reporter mocha-multi-reporters --reporter-options configFile=./test/mochareporters.json ./test/integration",
     "e2e": "cross-env E2E_TIMEOUT=600000 NODE_ENV=test RUNNING_IN_SPECTRON=true mocha --reporter mocha-multi-reporters --reporter-options configFile=./test/mochareporters.json ./test/e2e",
     "build": "npm run build:prod:main && npm run build:prod:renderer && npm run build:prod:browser",
+	"rebuild": "npm run build:main && npm run build:renderer",
     "build:main": "parcel build --target node --public-url . --out-dir ./dist --out-file main.js ./app/main/main.js",
     "build:renderer": "parcel build --no-content-hash --out-dir ./dist --target electron --public-url . ./app/renderer/*.html",
     "build:browser": "cross-env PUBLIC_URL=. npm run build:browser:url",

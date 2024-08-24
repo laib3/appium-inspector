@@ -4,7 +4,7 @@ import {languageList} from '../configs/app.config';
 import i18n from '../configs/i18next.config';
 import {checkForUpdates} from './updater';
 import {APPIUM_SESSION_EXTENSION, t} from './helpers';
-import {launchNewSessionWindow} from './windows';
+import {launchNewSessionWindow, openDeveloperTools} from './windows';
 
 const INSPECTOR_DOCS_URL = 'https://appium.github.io/appium-inspector';
 const APPIUM_DOCS_URL = 'https://appium.io';
@@ -87,6 +87,7 @@ function dropdownApp() {
 
 function dropdownFile(mainWindow, isMac) {
   const submenu = [
+    {label: t('Open DevTools'), click: openDeveloperTools },
     {label: t('New Window'), accelerator: 'CmdOrCtrl+N', click: launchNewSessionWindow},
     {label: t('Close Window'), role: 'close'},
     separator,

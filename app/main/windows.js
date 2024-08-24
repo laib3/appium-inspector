@@ -96,6 +96,10 @@ export function setupMainWindow({splashUrl, mainUrl, isDev}) {
   rebuildMenus(mainWindow, isDev);
 }
 
+export function openDeveloperTools(){
+	mainWindow.openDevTools();
+}
+
 export function launchNewSessionWindow() {
   const url = `file://${__dirname}/index.html`;
   const win = buildSessionWindow();
