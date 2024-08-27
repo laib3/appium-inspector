@@ -1,10 +1,10 @@
 // Columns in the Gamification information table
 export const GAMIFICATION_INFO_PROPS = {
+  interacted_widgets: 'Number of Interacted Widgets',
   session_id: 'Session ID',
   session_length: 'Session Length',
   session_details: 'Session Details',
-  active_appId: 'Currently Active App ID',
-  interacted_widgets: 'Number of interacted widgets'
+  active_appId: 'Currently Active App ID'
 };
 
 export const GAMIFICATION_INFO_TABLE_PARAMS = {
