@@ -9,7 +9,7 @@ let getSessionData;
 const GamificationInfo = (props) => {
   const {driver, t} = props;
 
-  const sessionArray = Object.keys(GAMIFICATION_INFO_PROPS).map((key) => [
+  const gamificationArray = Object.keys(GAMIFICATION_INFO_PROPS).map((key) => [
     key,
     String(GAMIFICATION_INFO_PROPS[key]),
   ]);
@@ -84,7 +84,7 @@ const GamificationInfo = (props) => {
   };
 
   const generateSessionInfo = (name) => {
-    const {sessionDetails, appId, status} = props;
+    const {sessionDetails, appId, status, interactedWidgets} = props;
     const {host, path, port} = sessionDetails;
     const {sessionId, connectedUrl} = driver || '';
 
@@ -123,6 +123,8 @@ const GamificationInfo = (props) => {
         return getTable(sessionArray, GAMIFICATION_INFO_TABLE_PARAMS.SESSION_KEY, false);
       case 'Currently Active App ID':
         return appId;
+      case 'Number of Interacted Widgets':
+        return interactedWidgets;
       default:
         return name;
     }
@@ -149,7 +151,7 @@ const GamificationInfo = (props) => {
 	[2] a list of dependencies including every value which is used inside the functions
   */
 
-  return getTable(sessionArray, GAMIFICATION_INFO_TABLE_PARAMS.OUTER_KEY, true);
+  return getTable(gamificationArray, GAMIFICATION_INFO_TABLE_PARAMS.OUTER_KEY, true);
 };
 
 export default GamificationInfo;

@@ -80,6 +80,7 @@ export const PROMPT_KEEP_ALIVE = 'PROMPT_KEEP_ALIVE';
 export const HIDE_PROMPT_KEEP_ALIVE = 'HIDE_PROMPT_KEEP_ALIVE';
 
 export const SELECT_INSPECTOR_TAB = 'SELECT_INSPECTOR_TAB';
+export const INCREMENT_INTERACTED_WIDGETS = 'INCREMENT_INTERACTED_WIDGETS';
 
 export const ENTERING_COMMAND_ARGS = 'ENTERING_COMMAND_ARGS';
 export const CANCEL_PENDING_COMMAND = 'CANCEL_PENDING_COMMAND';
@@ -714,6 +715,12 @@ export function selectInspectorTab(interaction) {
   return (dispatch) => {
     dispatch({type: SELECT_INSPECTOR_TAB, interaction});
   };
+}
+
+export function incrementInteractedWidgets(){
+	return (dispatch) => {
+		dispatch({type: INCREMENT_INTERACTED_WIDGETS})
+	};
 }
 
 export function startEnteringCommandArgs(commandName, command) {
