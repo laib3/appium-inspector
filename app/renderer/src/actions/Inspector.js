@@ -824,7 +824,6 @@ export function callClientMethod(params) {
     const client = AppiumClient.instance(driver);
     const res = await client.run(params);
     let {commandRes} = res;
-
     // Ignore empty objects
     if (_.isObject(res) && _.isEmpty(res)) {
       commandRes = null;

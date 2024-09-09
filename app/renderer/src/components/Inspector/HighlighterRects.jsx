@@ -1,5 +1,7 @@
 import React from 'react';
 
+import useEffect from 'react';
+
 import {RENDER_CENTROID_AS} from '../../constants/screenshot';
 import {parseCoordinates} from '../../utils/other';
 import HighlighterCentroid from './HighlighterCentroid.jsx';
@@ -169,6 +171,7 @@ const HighlighterRects = (props) => {
 
   // Displays element rectangles only
   const renderElements = (elements) => {
+	console.log(`LIMONE: rendering elements`);
     for (const elem of elements) {
       // only render elements with non-zero height and width
       if (!elem.properties.width || !elem.properties.height) {

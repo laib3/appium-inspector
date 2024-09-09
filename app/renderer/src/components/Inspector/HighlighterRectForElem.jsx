@@ -16,6 +16,7 @@ const HighlighterRectForElem = (props) => {
     unselectElement,
     dimensions,
     element,
+	incrementInteractedWidgets
   } = props;
 
   const {width, height, left, top} = dimensions;
@@ -35,7 +36,10 @@ const HighlighterRectForElem = (props) => {
       className={highlighterClasses.join(' ').trim()}
       onMouseOver={() => selectHoveredElement(key)}
       onMouseOut={unselectHoveredElement}
-      onClick={() => (key === selectedElement.path ? unselectElement() : selectElement(key))}
+      onClick={() => {
+		incrementInteractedWidgets();
+		(key === selectedElement.path ? unselectElement() : selectElement(key))
+	  }}
       key={key}
       style={{left: left || 0, top: top || 0, width: width || 0, height: height || 0}}
     >
