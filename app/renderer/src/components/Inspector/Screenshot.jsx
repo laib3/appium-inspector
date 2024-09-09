@@ -1,5 +1,5 @@
 import {Spin} from 'antd';
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 
 import {GESTURE_ITEM_STYLES, POINTER_TYPES} from '../../constants/gestures';
 import {DEFAULT_SWIPE, DEFAULT_TAP, SCREENSHOT_INTERACTION_MODE} from '../../constants/screenshot';
@@ -31,6 +31,13 @@ const Screenshot = (props) => {
   const containerEl = useRef();
   const [x, setX] = useState();
   const [y, setY] = useState();
+  /*
+  useEffect(() => {
+	console.log("-----------------------------");
+	console.log("Screenshot component re-rendered");
+	console.log("-----------------------------");
+  });
+  */
 
   const handleScreenshotClick = async () => {
     const {tapTickCoordinates} = props;
