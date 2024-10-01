@@ -84,15 +84,9 @@ const GamificationInfo = (props) => {
   };
 
   const generateSessionInfo = (name) => {
-    const {sessionDetails, appId, status, interactedWidgets} = props;
-    const {host, path, port} = sessionDetails;
+    const {appId, status, interactedWidgets} = props;
     const {sessionId, connectedUrl} = driver || '';
 
-    const serverDetailsArray = [
-      ['host', host],
-      ['path', path],
-      ['port', port],
-    ];
     const sessionArray =
       getSessionData != null
         ? Object.keys(getSessionData).map((key) => [key, getSessionData[key]])
@@ -111,16 +105,8 @@ const GamificationInfo = (props) => {
         return sessionId;
       case 'Session URL':
         return sessionUrl;
-      case 'Server Details':
-        return getTable(
-          [...serverDetailsArray, ...serverStatusArray],
-          GAMIFICATION_INFO_TABLE_PARAMS.SERVER_KEY,
-          false,
-        );
       case 'Session Length':
         return time;
-      case 'Session Details':
-        return getTable(sessionArray, GAMIFICATION_INFO_TABLE_PARAMS.SESSION_KEY, false);
       case 'Currently Active App ID':
         return appId;
       case 'Number of Interacted Widgets':
