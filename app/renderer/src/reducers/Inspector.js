@@ -117,7 +117,7 @@ const INITIAL_STATE = {
   screenshotInteractionMode: SCREENSHOT_INTERACTION_MODE.SELECT,
   searchedForElementBounds: null,
   selectedInspectorTab: INSPECTOR_TABS.SOURCE,
-  interactedWidgets: 0,
+  nInteractedWidgets: 0,
   appMode: APP_MODE.NATIVE,
   mjpegScreenshotUrl: null,
   pendingCommand: null,
@@ -481,11 +481,11 @@ export default function inspector(state = INITIAL_STATE, action) {
         selectedInspectorTab: action.interaction,
       };
 
-	case INCREMENT_INTERACTED_WIDGETS:
-		return {
-			...state,
-			interactedWidgets: state.interactedWidgets + 1
-		};
+    case INCREMENT_INTERACTED_WIDGETS:
+      return {
+        ...state,
+        nInteractedWidgets: state.nInteractedWidgets + 1
+      };
 
     case SET_APP_MODE:
       return {
