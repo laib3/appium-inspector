@@ -84,7 +84,7 @@ const GamificationInfo = (props) => {
   };
 
   const generateSessionInfo = (name) => {
-    const {appId, status, interactedWidgets} = props;
+    const {appId, status, nInteractedWidgets} = props;
     const {sessionId, connectedUrl} = driver || '';
 
     const sessionArray =
@@ -110,7 +110,7 @@ const GamificationInfo = (props) => {
       case 'Currently Active App ID':
         return appId;
       case 'Number of Interacted Widgets':
-        return interactedWidgets;
+        return nInteractedWidgets;
       default:
         return name;
     }
