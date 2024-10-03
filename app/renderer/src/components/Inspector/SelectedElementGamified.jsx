@@ -31,6 +31,7 @@ const SelectedElementGamified = (props) => {
     selectedElementId,
     elementInteractionsNotAvailable,
     selectedElementSearchInProgress,
+    incrementInteractedWidgets,
     t,
   } = props;
 
@@ -173,7 +174,10 @@ const SelectedElementGamified = (props) => {
             icon={tapIcon}
             id="btnTapElement"
             onClick={() => 
-              { applyClientMethod({methodName: 'click', elementId: selectedElementId}) }
+              { 
+                applyClientMethod({methodName: 'click', elementId: selectedElementId}) 
+                incrementInteractedWidgets();
+              }
             }
           />
         </Tooltip>
