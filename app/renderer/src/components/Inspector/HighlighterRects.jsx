@@ -171,7 +171,6 @@ const HighlighterRects = (props) => {
 
   // Displays element rectangles only
   const renderElements = (elements) => {
-	console.log(`LIMONE: rendering elements`);
     for (const elem of elements) {
       // only render elements with non-zero height and width
       if (!elem.properties.width || !elem.properties.height) {
