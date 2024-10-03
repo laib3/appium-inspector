@@ -54,7 +54,6 @@ for (const serverName of _.keys(ServerTypes)) {
   server[serverName] = {};
 }
 
-// HEREHEREHERE
 // Make sure there's always at least one cap
 const INITIAL_STATE = {
   savedSessions: [],
