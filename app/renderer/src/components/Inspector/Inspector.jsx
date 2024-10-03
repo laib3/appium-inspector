@@ -386,17 +386,37 @@ const Inspector = (props) => {
               label: 'Gamification',
               key: INSPECTOR_TABS.GAMIFICATION,
               children: (
-                <Card
-                  title={
-                    <span>
-                      <PlaySquareOutlined /> {'Gamification'}
-                    </span>
-                  }
-                  className={InspectorStyles['interaction-tab-card']}
-                >
-                  <GamificationInfo {...props} />
-                </Card>
-              ),
+                <div className="action-row">
+                  <div className="action-col">
+                    <Card
+                      title={
+                        <span>
+                          <PlaySquareOutlined /> {'Gamification'}
+                        </span>
+                      }
+                      className={InspectorStyles['interaction-tab-card']}
+                    >
+                      <GamificationInfo {...props} />
+                    </Card>
+                  </div>
+                  <div
+                    id="selectedElementContainerGamification"
+                    className={`${InspectorStyles['interaction-tab-container']} ${InspectorStyles['element-detail-container']} action-col`}
+                  >
+                    <Card
+                      title={
+                        <span>
+                          <TagOutlined /> {t('selectedElement')}
+                        </span>
+                      }
+                      className={InspectorStyles['selected-element-card']}
+                    >
+                      {selectedElement.path && <SelectedElement {...props} />}
+                      {!selectedElement.path && <i>{t('selectElementInSource')}</i>}
+                    </Card>
+                  </div>
+                </div>
+              )
             },
             {
               label: t('Gestures'),
