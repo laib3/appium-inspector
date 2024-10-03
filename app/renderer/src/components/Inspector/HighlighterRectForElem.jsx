@@ -37,7 +37,6 @@ const HighlighterRectForElem = (props) => {
       onMouseOver={() => selectHoveredElement(key)}
       onMouseOut={unselectHoveredElement}
       onClick={() => {
-		incrementInteractedWidgets();
 		(key === selectedElement.path ? unselectElement() : selectElement(key))
 	  }}
       key={key}
