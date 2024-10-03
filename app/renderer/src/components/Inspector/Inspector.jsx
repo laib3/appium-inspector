@@ -38,6 +38,7 @@ import SelectedElement from './SelectedElement.jsx';
 import SessionInfo from './SessionInfo.jsx';
 import GamificationInfo from './GamificationInfo.jsx';
 import Source from './Source.jsx';
+import SelectedElementGamified from './SelectedElementGamified';
 
 const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
 
@@ -411,7 +412,7 @@ const Inspector = (props) => {
                       }
                       className={InspectorStyles['selected-element-card']}
                     >
-                      {selectedElement.path && <SelectedElement {...props} />}
+                      {selectedElement.path && <SelectedElementGamified {...props} />}
                       {!selectedElement.path && <i>{t('selectElementInSource')}</i>}
                     </Card>
                   </div>
