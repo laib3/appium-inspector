@@ -32,6 +32,8 @@ const SelectedElementGamified = (props) => {
     elementInteractionsNotAvailable,
     selectedElementSearchInProgress,
     incrementInteractedWidgets,
+    addInteractedWidget,
+    interactedWidgets,
     t,
   } = props;
 
@@ -176,6 +178,7 @@ const SelectedElementGamified = (props) => {
             onClick={() => 
               { 
                 applyClientMethod({methodName: 'click', elementId: selectedElementId}) 
+                addInteractedWidget(selectedElementId);
                 incrementInteractedWidgets();
               }
             }

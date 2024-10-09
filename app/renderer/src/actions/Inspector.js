@@ -81,6 +81,7 @@ export const HIDE_PROMPT_KEEP_ALIVE = 'HIDE_PROMPT_KEEP_ALIVE';
 
 export const SELECT_INSPECTOR_TAB = 'SELECT_INSPECTOR_TAB';
 export const INCREMENT_INTERACTED_WIDGETS = 'INCREMENT_INTERACTED_WIDGETS';
+export const ADD_INTERACTED_WIDGET = 'ADD_INTERACTED_WIDGET';
 
 export const ENTERING_COMMAND_ARGS = 'ENTERING_COMMAND_ARGS';
 export const CANCEL_PENDING_COMMAND = 'CANCEL_PENDING_COMMAND';
@@ -723,6 +724,12 @@ export function incrementInteractedWidgets(){
 	};
 }
 
+export function addInteractedWidget(selectedElementId){
+  return (dispatch) => {
+    dispatch({type: ADD_INTERACTED_WIDGET, selectedElementId});
+  };
+}
+
 export function startEnteringCommandArgs(commandName, command) {
   return (dispatch) => {
     dispatch({type: ENTERING_COMMAND_ARGS, commandName, command});
@@ -817,8 +824,8 @@ export function callClientMethod(params) {
       params.skipRefresh = true;
     }
 
-    console.log(`Calling client method with params:`); // eslint-disable-line no-console
-    console.log(params); // eslint-disable-line no-console
+    // console.log(`Calling client method with params:`); // eslint-disable-line no-console
+    // console.log(params); // eslint-disable-line no-console
     const action = keepSessionAlive();
     action(dispatch, getState);
     const client = AppiumClient.instance(driver);
@@ -834,8 +841,8 @@ export function callClientMethod(params) {
       // ability to scroll etc...
       const result = JSON.stringify(commandRes, null, '  ');
       const truncatedResult = _.truncate(result, {length: 2000});
-      console.log(`Result of client command was:`); // eslint-disable-line no-console
-      console.log(truncatedResult); // eslint-disable-line no-console
+      // console.log(`Result of client command was:`); // eslint-disable-line no-console
+      // console.log(truncatedResult); // eslint-disable-line no-console
       setVisibleCommandResult(result, methodName)(dispatch);
     }
     res.elementId = res.id;

@@ -58,10 +58,6 @@ export default class AppiumClient {
     if (methodName) {
       if (elementId) {
         // eslint-disable-next-line no-console
-        console.log(
-          `Handling client method request with method '${methodName}', ` +
-            `args ${JSON.stringify(args)} and elementId ${elementId}`,
-        );
         res = await this.executeMethod({
           elementId,
           methodName,
@@ -72,20 +68,14 @@ export default class AppiumClient {
         });
       } else {
         // eslint-disable-next-line no-console
-        console.log(
-          `Handling client method request with method '${methodName}' ` +
-            `and args ${JSON.stringify(args)}`,
-        );
         res = await this.executeMethod({methodName, args, skipRefresh, skipScreenshot, appMode});
       }
     } else if (strategy && selector) {
       if (fetchArray) {
         // eslint-disable-next-line no-console
-        console.log(`Fetching elements with selector '${selector}' and strategy ${strategy}`);
         res = await this.fetchElements({strategy, selector});
       } else {
         // eslint-disable-next-line no-console
-        console.log(`Fetching an element with selector '${selector}' and strategy ${strategy}`);
         res = await this.fetchElement({strategy, selector});
       }
     }

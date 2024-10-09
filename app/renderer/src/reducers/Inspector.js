@@ -39,6 +39,7 @@ import {
   SELECT_HOVERED_ELEMENT,
   SELECT_INSPECTOR_TAB,
   INCREMENT_INTERACTED_WIDGETS,
+  ADD_INTERACTED_WIDGET,
   SELECT_TICK_ELEMENT,
   SESSION_DONE,
   SET_ACTION_FRAMEWORK,
@@ -83,7 +84,6 @@ import {
   UNSELECT_HOVERED_CENTROID,
   UNSELECT_HOVERED_ELEMENT,
   UNSELECT_TICK_ELEMENT,
-  INCREMENT_WIDGETS,
 } from '../actions/Inspector';
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot';
 import {APP_MODE, INSPECTOR_TABS, NATIVE_APP} from '../constants/session-inspector';
@@ -118,6 +118,7 @@ const INITIAL_STATE = {
   searchedForElementBounds: null,
   selectedInspectorTab: INSPECTOR_TABS.SOURCE,
   nInteractedWidgets: 0,
+  interactedWidgets: [],
   appMode: APP_MODE.NATIVE,
   mjpegScreenshotUrl: null,
   pendingCommand: null,
@@ -485,6 +486,12 @@ export default function inspector(state = INITIAL_STATE, action) {
       return {
         ...state,
         nInteractedWidgets: state.nInteractedWidgets + 1
+      };
+
+    case ADD_INTERACTED_WIDGET:
+      return {
+        ...state,
+        interactedWidgets: [...state.interactedWidgets, action.selectedElementId]
       };
 
     case SET_APP_MODE:
