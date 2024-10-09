@@ -7,7 +7,7 @@ import InspectorStyles from './Inspector.module.css';
 let getSessionData;
 
 const GamificationInfo = (props) => {
-  const {driver, t} = props;
+  const {driver, t, interactedWidgets} = props;
 
   const gamificationArray = Object.keys(GAMIFICATION_INFO_PROPS).map((key) => [
     key,
@@ -138,6 +138,13 @@ const GamificationInfo = (props) => {
 	[1] a setup function which connects to the external system and returns a cleanup function
 	[2] a list of dependencies including every value which is used inside the functions
   */
+ 
+  /* update current app whenever you interact with a new widget */
+  useEffect(() => {
+    const {getActiveAppId} = props;
+    const {isIOS, isAndroid} = driver.client;
+    getActiveAppId(isIOS, isAndroid);
+  }, [interactedWidgets]);
 
   return getTable(gamificationArray, GAMIFICATION_INFO_TABLE_PARAMS.OUTER_KEY, true);
 }
