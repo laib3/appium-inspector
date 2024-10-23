@@ -132,12 +132,6 @@ const GamificationInfo = (props) => {
 
     return () => clearInterval(interval.current); // cleanup
   }, []); 
-  /* 
-  	useEffect: connect to an external system (i.e. anything which is not managed by react itself)
-  	arguments = 
-	[1] a setup function which connects to the external system and returns a cleanup function
-	[2] a list of dependencies including every value which is used inside the functions
-  */
  
   /* update current app whenever you interact with a new widget */
   useEffect(() => {
