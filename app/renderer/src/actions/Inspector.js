@@ -82,6 +82,8 @@ export const HIDE_PROMPT_KEEP_ALIVE = 'HIDE_PROMPT_KEEP_ALIVE';
 export const SELECT_INSPECTOR_TAB = 'SELECT_INSPECTOR_TAB';
 export const INCREMENT_INTERACTED_WIDGETS = 'INCREMENT_INTERACTED_WIDGETS';
 export const ADD_INTERACTED_WIDGET = 'ADD_INTERACTED_WIDGET';
+export const ADD_PAGE = 'ADD_PAGE';
+export const SET_PAGE_ID = 'SET_PAGE_ID';
 
 export const ENTERING_COMMAND_ARGS = 'ENTERING_COMMAND_ARGS';
 export const CANCEL_PENDING_COMMAND = 'CANCEL_PENDING_COMMAND';
@@ -728,6 +730,18 @@ export function addInteractedWidget(selectedElementId){
   return (dispatch) => {
     dispatch({type: ADD_INTERACTED_WIDGET, selectedElementId});
   };
+}
+
+export function setCurrentPageId(pageId){
+  return (dispatch) => {
+    dispatch({type: SET_PAGE_ID, pageId});
+  }
+}
+
+export function addPage(page){
+  return async (dispatch) => {
+      dispatch({type: ADD_PAGE, page});
+  }
 }
 
 export function startEnteringCommandArgs(commandName, command) {

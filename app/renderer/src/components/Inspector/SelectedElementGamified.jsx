@@ -34,6 +34,9 @@ const SelectedElementGamified = (props) => {
     incrementInteractedWidgets,
     addInteractedWidget,
     interactedWidgets,
+    addPage,
+    pages,
+    sourceJSON,
     t,
   } = props;
 
@@ -177,6 +180,19 @@ const SelectedElementGamified = (props) => {
             id="btnTapElement"
             onClick={() => 
               { 
+                // const pageId = buildPageId(sourceJSON);
+                // const pageFound = pages.filter(p => p.pageId == pageId);
+                // if(pageFound.length == 0){
+                //   const f = async () => {
+                //     await addPage({"pageId": pageId, "nWidgets": 0, "interactedWidgetIds": [selectedElementId]});
+                //   }
+                //   f();
+                // } else { // page exists already
+                //   const page = pageFound[0]; 
+                //   
+                // }
+                // addPage('new_page');
+                // TODO: addPage to list of pages
                 applyClientMethod({methodName: 'click', elementId: selectedElementId}) 
                 addInteractedWidget(selectedElementId);
                 incrementInteractedWidgets();

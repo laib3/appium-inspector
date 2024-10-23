@@ -40,6 +40,8 @@ import {
   SELECT_INSPECTOR_TAB,
   INCREMENT_INTERACTED_WIDGETS,
   ADD_INTERACTED_WIDGET,
+  ADD_PAGE,
+  SET_PAGE_ID,
   SELECT_TICK_ELEMENT,
   SESSION_DONE,
   SET_ACTION_FRAMEWORK,
@@ -119,6 +121,8 @@ const INITIAL_STATE = {
   selectedInspectorTab: INSPECTOR_TABS.SOURCE,
   nInteractedWidgets: 0,
   interactedWidgets: [],
+  pages: [],
+  currentPageId: null,
   appMode: APP_MODE.NATIVE,
   mjpegScreenshotUrl: null,
   pendingCommand: null,
@@ -493,6 +497,18 @@ export default function inspector(state = INITIAL_STATE, action) {
         ...state,
         interactedWidgets: [...state.interactedWidgets, action.selectedElementId]
       };
+
+    case ADD_PAGE:
+      return {
+        ...state,
+        pages: [...state.pages, action.page]
+      }
+
+    case SET_PAGE_ID:
+      return {
+        ...state,
+        currentPageId: action.pageId
+      }
 
     case SET_APP_MODE:
       return {

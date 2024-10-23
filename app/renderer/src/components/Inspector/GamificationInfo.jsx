@@ -6,8 +6,18 @@ import InspectorStyles from './Inspector.module.css';
 
 let getSessionData;
 
+// a simple algorithm to build a page id from its content:
+// just concatenate the name of each widget.
+const buildPageId = (json) => {
+    // explore page 
+    const firstCapitalMatch = json.attributes.class.match(/[A-Z]/);
+    const widgetName = firstCapitalMatch ? json.attributes.class.slice(firstCapitalMatch.index) : json.attributes.class;
+    const pageId = widgetName + json.children.map(c => buildPageId(c)).join("");
+    return pageId;
+}
+
 const GamificationInfo = (props) => {
-  const {driver, t, interactedWidgets} = props;
+  const {driver, t, interactedWidgets, sourceJSON} = props;
 
   const gamificationArray = Object.keys(GAMIFICATION_INFO_PROPS).map((key) => [
     key,
@@ -132,12 +142,26 @@ const GamificationInfo = (props) => {
 
     return () => clearInterval(interval.current); // cleanup
   }, []); 
- 
+
+  /* update current pageId whenever the sourceJSON is changed */
+  useEffect(() => {
+    const {setCurrentPageId} = props;
+    if(sourceJSON){
+      const pageId = buildPageId(sourceJSON)
+        setCurrentPageId(pageId);
+        console.log(`LIMONE: currentPageId = `);
+        console.log(pageId)
+    } else 
+      setCurrentPageId(null);
+  }, [sourceJSON]);
+
   /* update current app whenever you interact with a new widget */
   useEffect(() => {
     const {getActiveAppId} = props;
-    const {isIOS, isAndroid} = driver.client;
-    getActiveAppId(isIOS, isAndroid);
+    if(driver) {
+      const {isIOS, isAndroid} = driver.client;
+      getActiveAppId(isIOS, isAndroid);
+    }
   }, [interactedWidgets]);
 
   return getTable(gamificationArray, GAMIFICATION_INFO_TABLE_PARAMS.OUTER_KEY, true);
