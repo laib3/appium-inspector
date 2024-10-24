@@ -143,14 +143,15 @@ const GamificationInfo = (props) => {
     return () => clearInterval(interval.current); // cleanup
   }, []); 
 
-  /* update current pageId whenever the sourceJSON is changed */
+  /* update current pageId whenever the sourceJSON is changed and possibly add to the list of pages */
   useEffect(() => {
-    const {setCurrentPageId} = props;
+    const {setCurrentPageId, pages, addPage} = props;
     if(sourceJSON){
-      const pageId = buildPageId(sourceJSON)
-        setCurrentPageId(pageId);
-        console.log(`LIMONE: currentPageId = `);
-        console.log(pageId)
+      const pageId = buildPageId(sourceJSON);
+      setCurrentPageId(pageId);
+      if(pages.filter(p => p.pageId == pageId).length == 0){ 
+        addPage({"pageId": pageId, "nWidgets": 0, "interactedWidgets": []});
+      }
     } else 
       setCurrentPageId(null);
   }, [sourceJSON]);
