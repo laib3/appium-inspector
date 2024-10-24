@@ -739,7 +739,7 @@ export function setCurrentPageId(pageId){
 }
 
 export function addPage(page){
-  return async (dispatch) => {
+  return (dispatch) => {
       dispatch({type: ADD_PAGE, page});
   }
 }
