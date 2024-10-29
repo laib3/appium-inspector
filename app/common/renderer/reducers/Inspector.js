@@ -38,6 +38,8 @@ import {
   SELECT_HOVERED_CENTROID,
   SELECT_HOVERED_ELEMENT,
   SELECT_INSPECTOR_TAB,
+  ADD_PAGE,
+  SET_PAGE_ID,
   SELECT_TICK_ELEMENT,
   SESSION_DONE,
   SET_ACTION_FRAMEWORK,
@@ -487,6 +489,19 @@ export default function inspector(state = INITIAL_STATE, action) {
         ...state,
         selectedInspectorTab: action.interaction,
       };
+
+    case ADD_PAGE:
+      return {
+        ...state,
+        pages: [...state.pages, action.page]
+      }
+
+    case SET_PAGE_ID:
+      return {
+        ...state,
+        currentPageId: action.pageId
+      }
+
 
     case SET_APP_MODE:
       return {

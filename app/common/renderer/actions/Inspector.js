@@ -80,6 +80,9 @@ export const HIDE_PROMPT_KEEP_ALIVE = 'HIDE_PROMPT_KEEP_ALIVE';
 
 export const SELECT_INSPECTOR_TAB = 'SELECT_INSPECTOR_TAB';
 
+export const ADD_PAGE = 'ADD_PAGE';
+export const SET_PAGE_ID = 'SET_PAGE_ID';
+
 export const ENTERING_COMMAND_ARGS = 'ENTERING_COMMAND_ARGS';
 export const CANCEL_PENDING_COMMAND = 'CANCEL_PENDING_COMMAND';
 export const SET_COMMAND_ARG = 'SET_COMMAND_ARG';
@@ -778,6 +781,18 @@ export function selectInspectorTab(interaction) {
   return (dispatch) => {
     dispatch({type: SELECT_INSPECTOR_TAB, interaction});
   };
+}
+
+export function setCurrentPageId(pageId){
+  return (dispatch) => {
+    dispatch({type: SET_PAGE_ID, pageId});
+  }
+}
+
+export function addPage(page){
+  return (dispatch) => {
+      dispatch({type: ADD_PAGE, page});
+  }
 }
 
 export function startEnteringCommandArgs(commandName, command) {
