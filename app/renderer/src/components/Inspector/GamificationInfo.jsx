@@ -16,6 +16,15 @@ const buildPageId = (json) => {
     return pageId;
 }
 
+const countClickableWidgets = (json) => {
+  let sum = 0;
+  sum += json.attributes.clickable ? 1 : 0;
+  for(const child in json.children){
+    sum += countClickableWidgets(child);
+  }
+  return sum;
+}
+
 const GamificationInfo = (props) => {
   const {driver, t, interactedWidgets, sourceJSON} = props;
 
@@ -149,8 +158,12 @@ const GamificationInfo = (props) => {
     if(sourceJSON){
       const pageId = buildPageId(sourceJSON);
       setCurrentPageId(pageId);
+      console.log(`LIMONE: sourceJSON = `);
+      console.log(JSON.stringify(sourceJSON));
+      console.log(`LIMONE: clickableWidgets = `);
+      console.log(countClickableWidgets(sourceJSON));
       if(pages.filter(p => p.pageId == pageId).length == 0){ 
-        addPage({"pageId": pageId, "nWidgets": 0, "interactedWidgets": []});
+        addPage({"pageId": pageId, "nInteractableWidgets": countClickableWidgets(sourceJSON), "interactedWidgets": []});
       }
     } else 
       setCurrentPageId(null);
