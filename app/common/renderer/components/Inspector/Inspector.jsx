@@ -8,6 +8,7 @@ import {
   HighlightOutlined,
   InfoCircleOutlined,
   PlusSquareOutlined,
+  PlaySquareOutlined,
   SelectOutlined,
   TagOutlined,
   ThunderboltOutlined,
