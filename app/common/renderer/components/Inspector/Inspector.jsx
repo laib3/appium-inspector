@@ -36,7 +36,9 @@ import SavedGestures from './SavedGestures.jsx';
 import Screenshot from './Screenshot.jsx';
 import SelectedElement from './SelectedElement.jsx';
 import SessionInfo from './SessionInfo.jsx';
+import GamificationInfo from './GamificationInfo.jsx';
 import Source from './Source.jsx';
+import SelectedElementGamified from './SelectedElementGamified';
 
 const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
 
@@ -364,6 +366,42 @@ const Inspector = (props) => {
                   <Commands {...props} />
                 </Card>
               ),
+            },
+            {
+              label: 'Gamification',
+              key: INSPECTOR_TABS.GAMIFICATION,
+              children: (
+                <div className="action-row">
+                  <div className="action-col">
+                    <Card
+                      title={
+                        <span>
+                          <PlaySquareOutlined /> {'Gamification'}
+                        </span>
+                      }
+                      className={InspectorStyles['interaction-tab-card']}
+                    >
+                      <GamificationInfo {...props} />
+                    </Card>
+                  </div>
+                  <div
+                    id="selectedElementContainerGamification"
+                    className={`${InspectorStyles['interaction-tab-container']} ${InspectorStyles['element-detail-container']} action-col`}
+                  >
+                    <Card
+                      title={
+                        <span>
+                          <TagOutlined /> {t('selectedElement')}
+                        </span>
+                      }
+                      className={InspectorStyles['selected-element-card']}
+                    >
+                      {selectedElement.path && <SelectedElementGamified {...props} />}
+                      {!selectedElement.path && <i>{t('selectElementInSource')}</i>}
+                    </Card>
+                  </div>
+                </div>
+              )
             },
             {
               label: t('Gestures'),
