@@ -16,7 +16,6 @@ const HighlighterRectForElem = (props) => {
     unselectElement,
     dimensions,
     element,
-	incrementInteractedWidgets
   } = props;
 
   const {width, height, left, top} = dimensions;

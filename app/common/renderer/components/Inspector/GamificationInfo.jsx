@@ -1,9 +1,9 @@
 import {Col, Row, Table} from 'antd';
-import React, {useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 
 import {GAMIFICATION_INFO_PROPS, GAMIFICATION_INFO_TABLE_PARAMS} from '../../constants/gamification';
 import InspectorStyles from './Inspector.module.css';
-
+import SessionCodeBox from './SessionCodeBox.jsx';
 let getSessionData;
 
 // a simple algorithm to build a page id from its content:
@@ -88,6 +88,9 @@ const GamificationInfo = (props) => {
             />
           </Col>
         </Row>
+        <div className={InspectorStyles['session-code-box']}>
+          <SessionCodeBox {...props} />
+        </div>
       </div>
     ) : (
       <Table
@@ -106,12 +109,6 @@ const GamificationInfo = (props) => {
     const {appId, status, interactedWidgets} = props;
     const {sessionId, connectedUrl} = driver || '';
 
-    const sessionArray =
-      getSessionData != null
-        ? Object.keys(getSessionData).map((key) => [key, getSessionData[key]])
-        : [];
-    const serverStatusArray =
-      status != null ? Object.keys(status).map((key) => [key, String(status[key])]) : [];
 
     // TODO: Fetch URL from Cloud Providers
     const sessionUrl =
@@ -158,10 +155,9 @@ const GamificationInfo = (props) => {
     if(sourceJSON){
       const pageId = buildPageId(sourceJSON);
       setCurrentPageId(pageId);
-      console.log(`LIMONE: sourceJSON = `);
-      console.log(JSON.stringify(sourceJSON));
-      console.log(`LIMONE: clickableWidgets = `);
-      console.log(countClickableWidgets(sourceJSON));
+      // console.log(`LIMONE: sourceJSON = `);
+      // console.log(JSON.stringify(sourceJSON));
+      // console.log(countClickableWidgets(sourceJSON));
       if(pages.filter(p => p.pageId == pageId).length == 0){ 
         addPage({"pageId": pageId, "nInteractableWidgets": countClickableWidgets(sourceJSON), "interactedWidgets": []});
       }
