@@ -122,6 +122,10 @@ const INITIAL_STATE = {
   screenshotInteractionMode: SCREENSHOT_INTERACTION_MODE.SELECT,
   searchedForElementBounds: null,
   selectedInspectorTab: INSPECTOR_TABS.SOURCE,
+  nInteractedWidgets: 0,
+  interactedWidgets: [],
+  pages: [],
+  currentPageId: null,
   appMode: APP_MODE.NATIVE,
   mjpegScreenshotUrl: null,
   pendingCommand: null,
@@ -515,7 +519,6 @@ export default function inspector(state = INITIAL_STATE, action) {
         ...state,
         currentPageId: action.pageId
       }
-
 
     case SET_APP_MODE:
       return {
