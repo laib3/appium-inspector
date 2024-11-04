@@ -38,6 +38,8 @@ import {
   SELECT_HOVERED_CENTROID,
   SELECT_HOVERED_ELEMENT,
   SELECT_INSPECTOR_TAB,
+  INCREMENT_INTERACTED_WIDGETS,
+  ADD_INTERACTED_WIDGET,
   ADD_PAGE,
   SET_PAGE_ID,
   SELECT_TICK_ELEMENT,
@@ -488,6 +490,18 @@ export default function inspector(state = INITIAL_STATE, action) {
       return {
         ...state,
         selectedInspectorTab: action.interaction,
+      };
+
+    case INCREMENT_INTERACTED_WIDGETS:
+      return {
+        ...state,
+        nInteractedWidgets: state.nInteractedWidgets + 1
+      };
+
+    case ADD_INTERACTED_WIDGET:
+      return {
+        ...state,
+        interactedWidgets: [...state.interactedWidgets, action.selectedElementId]
       };
 
     case ADD_PAGE:

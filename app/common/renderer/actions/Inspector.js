@@ -79,7 +79,8 @@ export const PROMPT_KEEP_ALIVE = 'PROMPT_KEEP_ALIVE';
 export const HIDE_PROMPT_KEEP_ALIVE = 'HIDE_PROMPT_KEEP_ALIVE';
 
 export const SELECT_INSPECTOR_TAB = 'SELECT_INSPECTOR_TAB';
-
+export const INCREMENT_INTERACTED_WIDGETS = 'INCREMENT_INTERACTED_WIDGETS';
+export const ADD_INTERACTED_WIDGET = 'ADD_INTERACTED_WIDGET';
 export const ADD_PAGE = 'ADD_PAGE';
 export const SET_PAGE_ID = 'SET_PAGE_ID';
 
@@ -780,6 +781,18 @@ export function clearCoordAction() {
 export function selectInspectorTab(interaction) {
   return (dispatch) => {
     dispatch({type: SELECT_INSPECTOR_TAB, interaction});
+  };
+}
+
+export function incrementInteractedWidgets(){
+	return (dispatch) => {
+		dispatch({type: INCREMENT_INTERACTED_WIDGETS})
+	};
+}
+
+export function addInteractedWidget(selectedElementId){
+  return (dispatch) => {
+    dispatch({type: ADD_INTERACTED_WIDGET, selectedElementId});
   };
 }
 
