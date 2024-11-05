@@ -155,8 +155,6 @@ const GamificationInfo = (props) => {
     if(sourceJSON){
       const pageId = buildPageId(sourceJSON);
       setCurrentPageId(pageId);
-      console.log(`LIMONE: sourceJSON = `);
-      console.log(JSON.stringify(sourceJSON));
       console.log(countClickableWidgets(sourceJSON));
       if(pages.filter(p => p.pageId == pageId).length == 0){ 
         addPage({"pageId": pageId, "nInteractableWidgets": countClickableWidgets(sourceJSON), "interactedWidgets": []});
