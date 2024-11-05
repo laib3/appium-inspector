@@ -18,7 +18,7 @@ const buildPageId = (json) => {
 
 const countClickableWidgets = (json) => {
   let sum = 0;
-  sum += json.attributes.clickable ? 1 : 0;
+  sum += json.attributes.clickable == "true" ? 1 : 0;
   for(const child of json.children){
     sum += countClickableWidgets(child);
   }
