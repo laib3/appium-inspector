@@ -3,7 +3,6 @@ import {useEffect, useRef, useState} from 'react';
 
 import {GAMIFICATION_INFO_PROPS, GAMIFICATION_INFO_TABLE_PARAMS} from '../../constants/gamification';
 import InspectorStyles from './Inspector.module.css';
-import SessionCodeBox from './SessionCodeBox.jsx';
 let getSessionData;
 
 // a simple algorithm to build a page id from its content:
@@ -88,9 +87,6 @@ const GamificationInfo = (props) => {
             />
           </Col>
         </Row>
-        <div className={InspectorStyles['session-code-box']}>
-          <SessionCodeBox {...props} />
-        </div>
       </div>
     ) : (
       <Table
