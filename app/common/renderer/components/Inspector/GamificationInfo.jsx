@@ -162,12 +162,10 @@ const GamificationInfo = (props) => {
     const {setCurrentPageId, pages, addPage} = props;
     if(sourceJSON){
       const pageId = buildPageId(sourceJSON);
-      if(pages.filter(p => p.pageId == pageId).length == 0){ 
-        const newPage =  { pageId: pageId, nInteractableWidgets: countClickableWidgets(sourceJSON), nInteractedWidgets: 0 };
+      if(! pages.some(p => p.pageId == pageId)){ 
+        const newPage = { pageId: pageId, nInteractableWidgets: countClickableWidgets(sourceJSON), nInteractedWidgets: 0 };
         addPage(newPage);
-		setCurrentPageId(pageId);
-        console.log(`LIMONE: Identificata una nuova pagina con pageId ${pageId}`);
-        console.log(`LIMONE: Identificati ${newPage.nInteractableWidgets} nuovi widgets interagibili.`);
+        setCurrentPageId(pageId);
       } else {
         setCurrentPageId(pageId);
       }
@@ -175,7 +173,7 @@ const GamificationInfo = (props) => {
       setCurrentPageId(null);
   }, [sourceJSON]);
 
-  /* update current app whenever you interact with a new widget */
+  /* update current app ID whenever you interact with a new widget */
   useEffect(() => {
     const {getActiveAppId} = props;
     if(driver) {

@@ -175,10 +175,10 @@ const SelectedElementGamified = (props) => {
             icon={tapIcon}
             id="btnTapElement"
             onClick={() => { 
-					applyClientMethod({methodName: 'click', elementId: selectedElementId}) 
-					if(interactedWidgetIds.filter(wId => wId === selectedElementId).length == 0)
-						addInteractedWidget(selectedElementId);
-			}}
+          applyClientMethod({methodName: 'click', elementId: selectedElementId}) 
+          if(! interactedWidgetIds.some(wid => wid === selectedElementId))
+            addInteractedWidget(selectedElementId);
+      }}
           />
         </Tooltip>
         <Button.Group className={styles.elementKeyInputActions}>

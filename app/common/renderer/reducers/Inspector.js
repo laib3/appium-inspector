@@ -135,7 +135,7 @@ const INITIAL_STATE = {
   showSourceAttrs: false,
   gestureUploadErrors: null,
   // gamification extension
-  nIteractedSessionWidgets: 0,
+  nInteractedSessionWidgets: 0,
   nInteractableSessionWidgets: 0,
   interactedWidgetIds: [],
   pages: [],
@@ -516,7 +516,7 @@ export default function inspector(state = INITIAL_STATE, action) {
       return {
         ...state,
         interactedWidgetIds: [...state.interactedWidgetIds, action.selectedElementId],
-		nInteractedSessionWidgets: state.nInteractedSessionWidgets + 1,
+        nInteractedSessionWidgets: state.nInteractedSessionWidgets + 1,
         pages: state.pages.map(p => { 
           if(p.pageId === state.currentPageId)
             return {...p, nInteractedWidgets: p.nInteractedWidgets + 1}; // increment the number of interacted widgets also in current page
@@ -529,7 +529,7 @@ export default function inspector(state = INITIAL_STATE, action) {
       return {
         ...state,
         pages: [...state.pages, action.page],
-		nInteractableSessionWidgets: state.nInteractedSessionWidgets + action.page.nInteractableWidgets
+        nInteractableSessionWidgets: state.nInteractableSessionWidgets + action.page.nInteractableWidgets
       }
 
     case SET_PAGE_ID:
