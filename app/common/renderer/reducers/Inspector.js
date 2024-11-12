@@ -38,10 +38,6 @@ import {
   SELECT_HOVERED_CENTROID,
   SELECT_HOVERED_ELEMENT,
   SELECT_INSPECTOR_TAB,
-  INCREMENT_INTERACTED_WIDGETS,
-  ADD_INTERACTED_WIDGET,
-  ADD_PAGE,
-  SET_PAGE_ID,
   SELECT_TICK_ELEMENT,
   SESSION_DONE,
   SET_ACTION_FRAMEWORK,
@@ -88,6 +84,11 @@ import {
   UNSELECT_HOVERED_CENTROID,
   UNSELECT_HOVERED_ELEMENT,
   UNSELECT_TICK_ELEMENT,
+  // INCREMENT_INTERACTED_WIDGETS,
+  ADD_INTERACTED_WIDGET,
+  ADD_PAGE,
+  SET_PAGE_ID,
+  // INCREMENT_INTERACTABLE_WIDGETS,
 } from '../actions/Inspector';
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot';
 import {APP_MODE, INSPECTOR_TABS, NATIVE_APP} from '../constants/session-inspector';
@@ -122,10 +123,6 @@ const INITIAL_STATE = {
   screenshotInteractionMode: SCREENSHOT_INTERACTION_MODE.SELECT,
   searchedForElementBounds: null,
   selectedInspectorTab: INSPECTOR_TABS.SOURCE,
-  nInteractedWidgets: 0,
-  interactedWidgets: [],
-  pages: [],
-  currentPageId: null,
   appMode: APP_MODE.NATIVE,
   mjpegScreenshotUrl: null,
   pendingCommand: null,
@@ -137,6 +134,12 @@ const INITIAL_STATE = {
   isAwaitingMjpegStream: true,
   showSourceAttrs: false,
   gestureUploadErrors: null,
+  // gamification extension
+  nIteractedSessionWidgets: 0,
+  nInteractableSessionWidgets: 0,
+  interactedWidgetIds: [],
+  pages: [],
+  currentPageId: null,
 };
 
 let nextState;
@@ -496,22 +499,37 @@ export default function inspector(state = INITIAL_STATE, action) {
         selectedInspectorTab: action.interaction,
       };
 
-    case INCREMENT_INTERACTED_WIDGETS:
-      return {
-        ...state,
-        nInteractedWidgets: state.nInteractedWidgets + 1
-      };
+    // case INCREMENT_INTERACTED_WIDGETS:
+    //   return {
+    //     ...state,
+    //     nInteractedSessionWidgets: state.nInteractedSessionWidgets + 1,
+    //     pages: state.pages.map(p => { 
+    //       if(p.pageId === state.currentPageId)
+    //         return {...p, nInteractedWidgets: p.nInteractedWidgets + 1}; // increment the number of interacted widgets also in current page
+    //       else 
+    //         return p;
+    //     })
+    //   };
 
+  // add the interacted widget id to the global list of interacted widgets
     case ADD_INTERACTED_WIDGET:
       return {
         ...state,
-        interactedWidgets: [...state.interactedWidgets, action.selectedElementId]
+        interactedWidgetIds: [...state.interactedWidgetIds, action.selectedElementId],
+		nInteractedSessionWidgets: state.nInteractedSessionWidgets + 1,
+        pages: state.pages.map(p => { 
+          if(p.pageId === state.currentPageId)
+            return {...p, nInteractedWidgets: p.nInteractedWidgets + 1}; // increment the number of interacted widgets also in current page
+          else 
+            return p;
+        })
       };
 
     case ADD_PAGE:
       return {
         ...state,
-        pages: [...state.pages, action.page]
+        pages: [...state.pages, action.page],
+		nInteractableSessionWidgets: state.nInteractedSessionWidgets + action.page.nInteractableWidgets
       }
 
     case SET_PAGE_ID:

@@ -79,10 +79,6 @@ export const PROMPT_KEEP_ALIVE = 'PROMPT_KEEP_ALIVE';
 export const HIDE_PROMPT_KEEP_ALIVE = 'HIDE_PROMPT_KEEP_ALIVE';
 
 export const SELECT_INSPECTOR_TAB = 'SELECT_INSPECTOR_TAB';
-export const INCREMENT_INTERACTED_WIDGETS = 'INCREMENT_INTERACTED_WIDGETS';
-export const ADD_INTERACTED_WIDGET = 'ADD_INTERACTED_WIDGET';
-export const ADD_PAGE = 'ADD_PAGE';
-export const SET_PAGE_ID = 'SET_PAGE_ID';
 
 export const ENTERING_COMMAND_ARGS = 'ENTERING_COMMAND_ARGS';
 export const CANCEL_PENDING_COMMAND = 'CANCEL_PENDING_COMMAND';
@@ -120,6 +116,11 @@ export const TOGGLE_SHOW_ATTRIBUTES = 'TOGGLE_SHOW_ATTRIBUTES';
 export const TOGGLE_REFRESHING_STATE = 'TOGGLE_REFRESHING_STATE';
 
 export const SET_GESTURE_UPLOAD_ERROR = 'SET_GESTURE_UPLOAD_ERROR';
+
+// gamification extensions
+export const ADD_INTERACTED_WIDGET = 'ADD_INTERACTED_WIDGET';
+export const ADD_PAGE = 'ADD_PAGE';
+export const SET_PAGE_ID = 'SET_PAGE_ID';
 
 const KEEP_ALIVE_PING_INTERVAL = 20 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
@@ -782,12 +783,6 @@ export function selectInspectorTab(interaction) {
   return (dispatch) => {
     dispatch({type: SELECT_INSPECTOR_TAB, interaction});
   };
-}
-
-export function incrementInteractedWidgets(){
-	return (dispatch) => {
-		dispatch({type: INCREMENT_INTERACTED_WIDGETS})
-	};
 }
 
 export function addInteractedWidget(selectedElementId){
