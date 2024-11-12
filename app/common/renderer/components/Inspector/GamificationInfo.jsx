@@ -1,4 +1,19 @@
-import {Col, Row, Table, Progress, Space } from 'antd';
+import {
+  AlertFilled,
+  BulbFilled,
+  CrownFilled,
+  EyeFilled,
+  FireFilled,
+  HeartFilled,
+  RobotFilled,
+  RocketFilled,
+  SkinFilled,
+  SmileFilled,
+  StarFilled,
+  SunFilled,
+  ThunderboltFilled
+} from '@ant-design/icons';
+import {Col, Row, Table, Progress, Input} from 'antd';
 import {useEffect, useRef, useState} from 'react';
 
 import {GAMIFICATION_INFO_PROPS, GAMIFICATION_INFO_TABLE_PARAMS} from '../../constants/gamification';
@@ -27,7 +42,9 @@ const countWidgets = (json) => {
 }
 
 const GamificationInfo = (props) => {
-  const {driver, t, pages, currentPageId, nInteractedSessionWidgets, nInteractableSessionWidgets, sourceJSON} = props;
+  const {driver, t, pages, currentPageId, 
+    nInteractedSessionWidgets, nInteractableSessionWidgets, sourceJSON,
+    user, setUser} = props;
 
   const gamificationArray = Object.keys(GAMIFICATION_INFO_PROPS).map((key) => [
     key,
@@ -40,6 +57,37 @@ const GamificationInfo = (props) => {
     } else {
       const currentPage = pages.find(p => p.pageId === currentPageId);
       return Math.round(100 * currentPage.nInteractedWidgets / currentPage.nInteractableWidgets)
+    }
+  }
+
+  const pickIcon = (iconName) => {
+    switch (iconName) {
+      case "alert":
+        return <AlertFilled/>;
+     case "bulb":
+        return <BulbFilled/>;
+     case "crown":
+        return <CrownFilled/>;
+     case "eye":
+        return <EyeFilled/>;
+     case "fire":
+        return <FireFilled/>;
+     case "heart":
+        return <HeartFilled/>;
+     case "robot":
+        return <RobotFilled/>;
+     case "rocket":
+        return <RocketFilled/>;
+     case "skin":
+        return <SkinFilled/>;
+     case "smile":
+        return <SmileFilled/>;
+     case "star":
+        return <StarFilled/>;
+     case "sun":
+        return <SunFilled/>;
+     case "thunderbolt":
+        return <ThunderboltFilled/>;
     }
   }
 
@@ -85,7 +133,14 @@ const GamificationInfo = (props) => {
     ];
 
     return outerTable ? (
-              <Space direction="vertical" size="large" style={{display: 'block', margin: '8px'}}>
+              <div>
+                <div id="userInfo" style={{paddingTop: '16px', paddingBottom: '16px'}}>
+                  <Input 
+                    size="large" 
+                    placeholder={user === null ? "user" : user.name} 
+                    prefix={user === null ? "?" : pickIcon(user.icon)}>
+                  </Input>
+                </div>
                 <div className={InspectorStyles['session-info-table']}>
                   <Row>
                     <Col span={24}>
@@ -102,14 +157,20 @@ const GamificationInfo = (props) => {
                 </div>
                 <div style={{paddingTop: '16px', paddingBottom: '16px'}}>
                   <div>Current Page Coverage:</div>
-                  <Progress percent={currentPageId === null ? 0 : getCurrentPageCoverage()} showInfo={true}></Progress>
+                  <Progress
+                    percent={currentPageId === null ? 0 : getCurrentPageCoverage()}
+                    showInfo={true}
+                  ></Progress>
                   <div>Incremental Coverage:</div>
-                  <Progress percent={Math.round((100 * nInteractedSessionWidgets) / nInteractableSessionWidgets)} showInfo={true}></Progress>
+                  <Progress
+                    percent={Math.round((100 * nInteractedSessionWidgets) / nInteractableSessionWidgets)}
+                    showInfo={true}
+                  ></Progress>
                   <div>{'Tot Interacted Widgets: ' + nInteractedSessionWidgets}</div>
                   <div>{'Tot Interactable Widgets: ' + nInteractableSessionWidgets}</div>
                 </div>
                 <Source {...props}></Source>
-              </Space>
+              </div>
             ) : (
               <Table
                 className={InspectorStyles['session-inner-table']}
@@ -190,6 +251,15 @@ const GamificationInfo = (props) => {
       getActiveAppId(isIOS, isAndroid);
     }
   }, [nInteractedSessionWidgets]);
+
+  useEffect(() => {
+    const icons = ["alert", "bulb", "crown", "eye", "fire", "heart", "robot", "rocket", "skin", "smile", "star", "sun", "thunderbolt"];
+    const random_idx = Math.round(100 * Math.random() % icons.length);
+    const random_icon = icons[random_idx];
+    if(user === null){ // generate random user name and icon
+      setUser({ name : `user${random_idx}`, icon: `${random_icon}` });
+    }
+  }, []);
 
   return getTable(gamificationArray, GAMIFICATION_INFO_TABLE_PARAMS.OUTER_KEY, true);
 }

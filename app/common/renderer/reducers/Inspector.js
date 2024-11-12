@@ -84,11 +84,11 @@ import {
   UNSELECT_HOVERED_CENTROID,
   UNSELECT_HOVERED_ELEMENT,
   UNSELECT_TICK_ELEMENT,
-  // INCREMENT_INTERACTED_WIDGETS,
+  // Gamification extensions
   ADD_INTERACTED_WIDGET,
   ADD_PAGE,
   SET_PAGE_ID,
-  // INCREMENT_INTERACTABLE_WIDGETS,
+  SET_USER
 } from '../actions/Inspector';
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot';
 import {APP_MODE, INSPECTOR_TABS, NATIVE_APP} from '../constants/session-inspector';
@@ -139,6 +139,7 @@ const INITIAL_STATE = {
   nInteractableSessionWidgets: 0,
   interactedWidgetIds: [],
   pages: [],
+  user: null,
   currentPageId: null,
 };
 
@@ -536,6 +537,12 @@ export default function inspector(state = INITIAL_STATE, action) {
       return {
         ...state,
         currentPageId: action.pageId
+      }
+
+    case SET_USER:
+      return {
+        ...state,
+        user: action.user
       }
 
     case SET_APP_MODE:
