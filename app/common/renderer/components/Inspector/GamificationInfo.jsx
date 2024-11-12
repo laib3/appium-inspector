@@ -1,4 +1,4 @@
-import {Col, Row, Table} from 'antd';
+import {Col, Row, Table, Progress, Space} from 'antd';
 import {useEffect, useRef, useState} from 'react';
 
 import {GAMIFICATION_INFO_PROPS, GAMIFICATION_INFO_TABLE_PARAMS} from '../../constants/gamification';
@@ -7,6 +7,7 @@ let getSessionData;
 
 // a simple algorithm to build a page id from its content:
 // just concatenate the name of each widget.
+// sort of HASH function
 const buildPageId = (json) => {
     // explore page 
     const firstCapitalMatch = json.attributes.class.match(/[A-Z]/);
@@ -25,7 +26,7 @@ const countClickableWidgets = (json) => {
 }
 
 const GamificationInfo = (props) => {
-  const {driver, t, interactedWidgets, sourceJSON} = props;
+  const {driver, t, nInteractedSessionWidgets, nInteractableSessionWidgets, sourceJSON} = props;
 
   const gamificationArray = Object.keys(GAMIFICATION_INFO_PROPS).map((key) => [
     key,
@@ -74,35 +75,46 @@ const GamificationInfo = (props) => {
     ];
 
     return outerTable ? (
-      <div className={InspectorStyles['session-info-table']}>
-        <Row>
-          <Col span={24}>
-            <Table
-              columns={columns}
-              dataSource={dataSource}
-              pagination={false}
-              showHeader={false}
-              bordered={true}
-              size="small"
-            />
-          </Col>
-        </Row>
-      </div>
-    ) : (
-      <Table
-        className={InspectorStyles['session-inner-table']}
-        columns={columns}
-        dataSource={dataSource}
-        pagination={false}
-        showHeader={false}
-        size="small"
-        scroll={{y: GAMIFICATION_INFO_TABLE_PARAMS.SCROLL_DISTANCE_Y}}
-      />
-    );
+                <Space direction="vertical" size="large" style={{display: "block", margin: "8px"}}>
+                  <div className={InspectorStyles['session-info-table']}>
+                    <Row>
+                      <Col span={24}>
+                        <Table
+                          columns={columns}
+                          dataSource={dataSource}
+                          pagination={false}
+                          showHeader={false}
+                          bordered={true}
+                          size="small"
+                        />
+                      </Col>
+                    </Row>
+                  </div>
+                    <div>
+                      <div>Current Page Coverage:</div>
+                      <Progress percent={50} showInfo={true}></Progress>
+                      <div>Incremental Coverage:</div>
+                      <Progress percent={100} showInfo={true}>
+                      </Progress>
+                      <div>{"Tot Interacted Widgets: " + nInteractedSessionWidgets}</div>
+                      <div>{"Tot Interactable Widgets: " + nInteractableSessionWidgets}</div>
+                    </div>
+                </Space>
+            ) : (
+              <Table
+                className={InspectorStyles['session-inner-table']}
+                columns={columns}
+                dataSource={dataSource}
+                pagination={false}
+                showHeader={false}
+                size="small"
+                scroll={{y: GAMIFICATION_INFO_TABLE_PARAMS.SCROLL_DISTANCE_Y}}
+              />
+            );
   };
 
   const generateSessionInfo = (name) => {
-    const {appId, status, interactedWidgets} = props;
+    const {appId, nInteractedSessionWidgets, interactedWidgetIds} = props;
     const {sessionId, connectedUrl} = driver || '';
 
 
@@ -122,9 +134,9 @@ const GamificationInfo = (props) => {
       case 'Currently Active App ID':
         return appId;
       case 'Number of Interacted Widgets':
-        return interactedWidgets.length;
+        return nInteractedSessionWidgets;
       case 'Last interacted widget':
-        return interactedWidgets[0];
+        return interactedWidgetIds[0];
       default:
         return name;
     }
@@ -150,10 +162,14 @@ const GamificationInfo = (props) => {
     const {setCurrentPageId, pages, addPage} = props;
     if(sourceJSON){
       const pageId = buildPageId(sourceJSON);
-      setCurrentPageId(pageId);
-      console.log(countClickableWidgets(sourceJSON));
       if(pages.filter(p => p.pageId == pageId).length == 0){ 
-        addPage({"pageId": pageId, "nInteractableWidgets": countClickableWidgets(sourceJSON), "interactedWidgets": []});
+        const newPage =  { pageId: pageId, nInteractableWidgets: countClickableWidgets(sourceJSON), nInteractedWidgets: 0 };
+        addPage(newPage);
+		setCurrentPageId(pageId);
+        console.log(`LIMONE: Identificata una nuova pagina con pageId ${pageId}`);
+        console.log(`LIMONE: Identificati ${newPage.nInteractableWidgets} nuovi widgets interagibili.`);
+      } else {
+        setCurrentPageId(pageId);
       }
     } else 
       setCurrentPageId(null);
@@ -166,7 +182,7 @@ const GamificationInfo = (props) => {
       const {isIOS, isAndroid} = driver.client;
       getActiveAppId(isIOS, isAndroid);
     }
-  }, [interactedWidgets]);
+  }, [nInteractedSessionWidgets]);
 
   return getTable(gamificationArray, GAMIFICATION_INFO_TABLE_PARAMS.OUTER_KEY, true);
 }

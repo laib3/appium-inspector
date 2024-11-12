@@ -31,12 +31,8 @@ const SelectedElementGamified = (props) => {
     selectedElementId,
     elementInteractionsNotAvailable,
     selectedElementSearchInProgress,
-    incrementInteractedWidgets,
     addInteractedWidget,
-    interactedWidgets,
-    addPage,
-    pages,
-    sourceJSON,
+    interactedWidgetIds,
     t,
   } = props;
 
@@ -178,13 +174,11 @@ const SelectedElementGamified = (props) => {
             disabled={isDisabled}
             icon={tapIcon}
             id="btnTapElement"
-            onClick={() => 
-              { 
-                applyClientMethod({methodName: 'click', elementId: selectedElementId}) 
-                addInteractedWidget(selectedElementId);
-                incrementInteractedWidgets();
-              }
-            }
+            onClick={() => { 
+					applyClientMethod({methodName: 'click', elementId: selectedElementId}) 
+					if(interactedWidgetIds.filter(wId => wId === selectedElementId).length == 0)
+						addInteractedWidget(selectedElementId);
+			}}
           />
         </Tooltip>
         <Button.Group className={styles.elementKeyInputActions}>
