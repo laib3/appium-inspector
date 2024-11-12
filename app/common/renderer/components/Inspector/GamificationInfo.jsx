@@ -13,13 +13,15 @@ import {
   SunFilled,
   ThunderboltFilled
 } from '@ant-design/icons';
-import {Col, Row, Table, Progress, Input} from 'antd';
+import {Col, Row, Table, Progress, Input, Typography} from 'antd';
 import {useEffect, useRef, useState} from 'react';
 
 import {GAMIFICATION_INFO_PROPS, GAMIFICATION_INFO_TABLE_PARAMS} from '../../constants/gamification';
 import InspectorStyles from './Inspector.module.css';
 import Source from './Source.jsx'
 let getSessionData;
+
+const {Title} = Typography;
 
 // a simple algorithm to build a page id from its content:
 // just concatenate the name of each widget.
@@ -137,8 +139,10 @@ const GamificationInfo = (props) => {
                 <div id="userInfo" style={{paddingTop: '16px', paddingBottom: '16px'}}>
                   <Input 
                     size="large" 
-                    placeholder={user === null ? "user" : user.name} 
-                    prefix={user === null ? "?" : pickIcon(user.icon)}>
+                    placeholder="UserName"
+                    prefix={user === null ? "?" : pickIcon(user.icon)}
+                    onBlur={(e) => { setUser({...user, name: e.target.value}); }}
+                  >
                   </Input>
                 </div>
                 <div className={InspectorStyles['session-info-table']}>
@@ -166,10 +170,11 @@ const GamificationInfo = (props) => {
                     percent={Math.round((100 * nInteractedSessionWidgets) / nInteractableSessionWidgets)}
                     showInfo={true}
                   ></Progress>
-                  <div>{'Tot Interacted Widgets: ' + nInteractedSessionWidgets}</div>
-                  <div>{'Tot Interactable Widgets: ' + nInteractableSessionWidgets}</div>
                 </div>
-                <Source {...props}></Source>
+                <div id="sourceContainer">
+                  <Title level={5}>Source</Title>
+                  <Source {...props}></Source>
+                </div>
               </div>
             ) : (
               <Table
