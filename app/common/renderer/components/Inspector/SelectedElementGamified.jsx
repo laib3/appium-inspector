@@ -161,24 +161,26 @@ const SelectedElementGamified = (props) => {
 
   return (
     <div>
-      {elementInteractionsNotAvailable && (
-        <Row type={ROW.FLEX} gutter={10} className={styles.selectedElemNotInteractableAlertRow}>
-          <Col>
-            <Alert type={ALERT.INFO} message={t('interactionsNotAvailable')} showIcon />
-          </Col>
-        </Row>
-      )}
+      {
+        elementInteractionsNotAvailable && (
+          <Row type={ROW.FLEX} gutter={10} className={styles.selectedElemNotInteractableAlertRow}>
+            <Col>
+              <Alert type={ALERT.INFO} message={t('interactionsNotAvailable')} showIcon />
+            </Col>
+          </Row>
+        )
+      }
       <Row justify="center" type={ROW.FLEX} align="middle" className={styles.elementActions}>
         <Tooltip title={t('Tap')}>
           <Button
             disabled={isDisabled}
             icon={tapIcon}
             id="btnTapElement"
-            onClick={() => { 
-          applyClientMethod({methodName: 'click', elementId: selectedElementId}) 
-          if(! interactedWidgetIds.some(wid => wid === selectedElementId))
-            addInteractedWidget(selectedElementId);
-      }}
+            onClick={() => {
+              applyClientMethod({methodName: 'click', elementId: selectedElementId});
+              if (!interactedWidgetIds.some((wid) => wid === selectedElementId))
+                addInteractedWidget(selectedElementId);
+            }}
           />
         </Tooltip>
         <Button.Group className={styles.elementKeyInputActions}>

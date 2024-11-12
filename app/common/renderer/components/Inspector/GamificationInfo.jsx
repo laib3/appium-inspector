@@ -1,8 +1,9 @@
-import {Col, Row, Table, Progress, Space} from 'antd';
+import {Col, Row, Table, Progress, Space } from 'antd';
 import {useEffect, useRef, useState} from 'react';
 
 import {GAMIFICATION_INFO_PROPS, GAMIFICATION_INFO_TABLE_PARAMS} from '../../constants/gamification';
 import InspectorStyles from './Inspector.module.css';
+import Source from './Source.jsx'
 let getSessionData;
 
 // a simple algorithm to build a page id from its content:
@@ -16,22 +17,31 @@ const buildPageId = (json) => {
     return pageId;
 }
 
-const countClickableWidgets = (json) => {
-  let sum = 0;
-  sum += json.attributes.clickable == "true" ? 1 : 0;
+/* all widgets may be interacted with Appium Inspector */
+const countWidgets = (json) => {
+  let sum = 1;
   for(const child of json.children){
-    sum += countClickableWidgets(child);
+    sum += countWidgets(child);
   }
   return sum;
 }
 
 const GamificationInfo = (props) => {
-  const {driver, t, nInteractedSessionWidgets, nInteractableSessionWidgets, sourceJSON} = props;
+  const {driver, t, pages, currentPageId, nInteractedSessionWidgets, nInteractableSessionWidgets, sourceJSON} = props;
 
   const gamificationArray = Object.keys(GAMIFICATION_INFO_PROPS).map((key) => [
     key,
     String(GAMIFICATION_INFO_PROPS[key]),
   ]);
+
+  const getCurrentPageCoverage = () => {
+    if(currentPageId === null || currentPageId === undefined){
+      return 0;
+    } else {
+      const currentPage = pages.find(p => p.pageId === currentPageId);
+      return Math.round(100 * currentPage.nInteractedWidgets / currentPage.nInteractableWidgets)
+    }
+  }
 
   const generateSessionTime = () => {
     const {sessionStartTime} = props;
@@ -75,31 +85,31 @@ const GamificationInfo = (props) => {
     ];
 
     return outerTable ? (
-                <Space direction="vertical" size="large" style={{display: "block", margin: "8px"}}>
-                  <div className={InspectorStyles['session-info-table']}>
-                    <Row>
-                      <Col span={24}>
-                        <Table
-                          columns={columns}
-                          dataSource={dataSource}
-                          pagination={false}
-                          showHeader={false}
-                          bordered={true}
-                          size="small"
-                        />
-                      </Col>
-                    </Row>
-                  </div>
-                    <div>
-                      <div>Current Page Coverage:</div>
-                      <Progress percent={50} showInfo={true}></Progress>
-                      <div>Incremental Coverage:</div>
-                      <Progress percent={100} showInfo={true}>
-                      </Progress>
-                      <div>{"Tot Interacted Widgets: " + nInteractedSessionWidgets}</div>
-                      <div>{"Tot Interactable Widgets: " + nInteractableSessionWidgets}</div>
-                    </div>
-                </Space>
+              <Space direction="vertical" size="large" style={{display: 'block', margin: '8px'}}>
+                <div className={InspectorStyles['session-info-table']}>
+                  <Row>
+                    <Col span={24}>
+                      <Table
+                        columns={columns}
+                        dataSource={dataSource}
+                        pagination={false}
+                        showHeader={false}
+                        bordered={true}
+                        size="small"
+                      />
+                    </Col>
+                  </Row>
+                </div>
+                <div style={{paddingTop: '16px', paddingBottom: '16px'}}>
+                  <div>Current Page Coverage:</div>
+                  <Progress percent={currentPageId === null ? 0 : getCurrentPageCoverage()} showInfo={true}></Progress>
+                  <div>Incremental Coverage:</div>
+                  <Progress percent={Math.round((100 * nInteractedSessionWidgets) / nInteractableSessionWidgets)} showInfo={true}></Progress>
+                  <div>{'Tot Interacted Widgets: ' + nInteractedSessionWidgets}</div>
+                  <div>{'Tot Interactable Widgets: ' + nInteractableSessionWidgets}</div>
+                </div>
+                <Source {...props}></Source>
+              </Space>
             ) : (
               <Table
                 className={InspectorStyles['session-inner-table']}
@@ -123,7 +133,6 @@ const GamificationInfo = (props) => {
       sessionId && connectedUrl
         ? `${connectedUrl}session/${sessionId}`
         : t('Error Fetching Session URL');
-
     switch (name) {
       case 'Session ID':
         return sessionId;
@@ -163,7 +172,7 @@ const GamificationInfo = (props) => {
     if(sourceJSON){
       const pageId = buildPageId(sourceJSON);
       if(! pages.some(p => p.pageId == pageId)){ 
-        const newPage = { pageId: pageId, nInteractableWidgets: countClickableWidgets(sourceJSON), nInteractedWidgets: 0 };
+        const newPage = { pageId: pageId, nInteractableWidgets: countWidgets(sourceJSON), nInteractedWidgets: 0 };
         addPage(newPage);
         setCurrentPageId(pageId);
       } else {
