@@ -121,6 +121,7 @@ export const SET_GESTURE_UPLOAD_ERROR = 'SET_GESTURE_UPLOAD_ERROR';
 export const ADD_INTERACTED_WIDGET = 'ADD_INTERACTED_WIDGET';
 export const ADD_PAGE = 'ADD_PAGE';
 export const SET_PAGE_ID = 'SET_PAGE_ID';
+export const SET_USER = 'SET_USER';
 
 const KEEP_ALIVE_PING_INTERVAL = 20 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
@@ -794,6 +795,12 @@ export function addInteractedWidget(selectedElementId){
 export function setCurrentPageId(pageId){
   return (dispatch) => {
     dispatch({type: SET_PAGE_ID, pageId});
+  }
+}
+
+export function setUser(user){
+  return (dispatch) => {
+    dispatch({type: SET_USER, user});
   }
 }
 
