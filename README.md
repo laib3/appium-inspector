@@ -4,6 +4,8 @@
    Gamified GUI Inspector tool for all kinds of apps, powered by Appium.
 </p>
 
+<img alt="GAppium" src="./docs/assets/images/gamification-screenshot.png" width="800">
+
 
 Appium Inspector is a GUI assistant tool for Appium, providing visual inspection of the application
 under test. It can show the application page screenshot along with its page source, and includes
@@ -24,19 +26,13 @@ name.
 
 ---
 
-## Installation
+## Usage
 
-Appium Inspector is released in two formats:
+**Note**: this assumes you have a running instance of the Appium
+server in background.
 
-1. Standalone desktop application for macOS, Windows, and Linux - download it from the
-   [**Releases**](https://github.com/appium/appium-inspector/releases) section
-2. Web application - **<https://inspector.appiumpro.com>** (note that
-   [CORS must be enabled](https://appium.github.io/appium-inspector/latest/troubleshooting/#cannot-start-a-session-using-browser-inspector)
-   in order to connect to an Appium server)
-
-Check the [System Requirements](https://appium.github.io/appium-inspector/latest/quickstart/requirements/)
-and [Installation](https://appium.github.io/appium-inspector/latest/quickstart/installation/)
-documentation for more details.
+You can run Appium Inspector in development mode with `npm run
+dev:electron`.
 
 ## Features
 
