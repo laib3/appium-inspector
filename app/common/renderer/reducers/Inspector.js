@@ -122,7 +122,7 @@ const INITIAL_STATE = {
   assignedVarCache: {},
   screenshotInteractionMode: SCREENSHOT_INTERACTION_MODE.SELECT,
   searchedForElementBounds: null,
-  selectedInspectorTab: INSPECTOR_TABS.SOURCE,
+  selectedInspectorTab: INSPECTOR_TABS.GAMIFICATION,
   appMode: APP_MODE.NATIVE,
   mjpegScreenshotUrl: null,
   pendingCommand: null,

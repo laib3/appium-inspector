@@ -15,6 +15,7 @@ import {
 } from '@ant-design/icons';
 import {Col, Row, Table, Progress, Input, Typography} from 'antd';
 import {useEffect, useRef, useState} from 'react';
+import {notification} from 'antd';
 
 import {GAMIFICATION_INFO_PROPS, GAMIFICATION_INFO_TABLE_PARAMS} from '../../constants/gamification';
 import InspectorStyles from './Inspector.module.css';
@@ -118,6 +119,8 @@ const GamificationInfo = (props) => {
       [keyValue]: value,
     }));
 
+    const newPagesFound = 0;
+
     const columns = [
       {
         dataIndex: keyName,
@@ -160,21 +163,24 @@ const GamificationInfo = (props) => {
                   </Row>
                 </div>
                 <div style={{paddingTop: '16px', paddingBottom: '16px'}}>
-                  <div>Current Page Coverage:</div>
+                  <div style={{paddingBottom: '4px'}}><b>New Pages Found:</b> {newPagesFound}</div>
+                  <div><b>Current Page Coverage:</b></div>
                   <Progress
                     percent={currentPageId === null ? 0 : getCurrentPageCoverage()}
                     showInfo={true}
                   ></Progress>
-                  <div>Incremental Coverage:</div>
+                  <div><b>Incremental Coverage:</b></div>
                   <Progress
                     percent={Math.round((100 * nInteractedSessionWidgets) / nInteractableSessionWidgets)}
                     showInfo={true}
                   ></Progress>
                 </div>
+                {/*}
                 <div id="sourceContainer">
                   <Title level={5}>Source</Title>
                   <Source {...props}></Source>
                 </div>
+                */}
               </div>
             ) : (
               <Table
@@ -227,6 +233,7 @@ const GamificationInfo = (props) => {
     (async () => (getSessionData = await applyClientMethod({methodName: 'getSession'})))();
     interval.current = setInterval(() => {
       setTime(generateSessionTime());
+      // TODO: logTime
     }, 1000);
 
     return () => clearInterval(interval.current); // cleanup
@@ -255,6 +262,9 @@ const GamificationInfo = (props) => {
       const {isIOS, isAndroid} = driver.client;
       getActiveAppId(isIOS, isAndroid);
     }
+    // notification.error({
+    //   message: "You interacted with a new widget!"
+    // });
   }, [nInteractedSessionWidgets]);
 
   useEffect(() => {

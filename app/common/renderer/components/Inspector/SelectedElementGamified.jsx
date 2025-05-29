@@ -6,7 +6,7 @@ import {
   LoadingOutlined,
   SendOutlined,
 } from '@ant-design/icons';
-import {Alert, Button, Col, Input, Row, Spin, Table, Tooltip} from 'antd';
+import {Alert, Button, Col, Input, Row, Spin, Table, Tooltip, notification} from 'antd';
 import _ from 'lodash';
 import React, {useRef} from 'react';
 
@@ -180,6 +180,10 @@ const SelectedElementGamified = (props) => {
               applyClientMethod({methodName: 'click', elementId: selectedElementId});
               if (!interactedWidgetIds.some((wid) => wid === selectedElementId))
                 addInteractedWidget(selectedElementId);
+                // also send a notification for the interaction that just happened
+                notification.success({
+                  message: "First Badge: You interacted with a new widget!"
+                });
             }}
           />
         </Tooltip>
