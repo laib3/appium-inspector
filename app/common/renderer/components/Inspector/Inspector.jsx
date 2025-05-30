@@ -13,7 +13,7 @@ import {
   TagOutlined,
   ThunderboltOutlined,
 } from '@ant-design/icons';
-import {Button, Card, Modal, Space, Spin, Switch, Tabs, Tooltip} from 'antd';
+import {Button, Card, Modal, Space, Spin, Switch, Tabs, Tooltip, Col} from 'antd';
 import {debounce} from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
@@ -164,7 +164,7 @@ const Inspector = (props) => {
       applyClientMethod,
       getSavedActionFramework,
       runKeepAliveLoop,
-      setSessionTime,
+      // setSessionTime,
       storeSessionSettings,
     } = props;
     const curHeight = window.innerHeight;
@@ -181,7 +181,7 @@ const Inspector = (props) => {
     storeSessionSettings();
     getSavedActionFramework();
     runKeepAliveLoop();
-    setSessionTime(Date.now());
+    // setSessionTime(Date.now());
   }, []);
 
   /**
@@ -308,6 +308,7 @@ const Inspector = (props) => {
                     id="selectedElementContainerGamification"
                     className={`${InspectorStyles['interaction-tab-container']} ${InspectorStyles['element-detail-container']} action-col`}
                   >
+                  <Col>
                     <Card
                       title={
                         <span>
@@ -319,6 +320,7 @@ const Inspector = (props) => {
                       {selectedElement.path && <SelectedElementGamified {...props} />}
                       {!selectedElement.path && <i>{t('selectElementInSource')}</i>}
                     </Card>
+                  </Col>
                   </div>
                 </div>
               )

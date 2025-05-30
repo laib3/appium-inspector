@@ -122,6 +122,7 @@ export const ADD_INTERACTED_WIDGET = 'ADD_INTERACTED_WIDGET';
 export const ADD_PAGE = 'ADD_PAGE';
 export const SET_PAGE_ID = 'SET_PAGE_ID';
 export const SET_USER = 'SET_USER';
+export const SET_CURRENT_TIME = 'SET_CURRENT_TIME';
 
 const KEEP_ALIVE_PING_INTERVAL = 20 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
@@ -756,7 +757,7 @@ export function getServerStatus() {
 }
 
 // Start the session timer once session starts
-export function setSessionTime(time) {
+export function setSessionStartTime(time) {
   return (dispatch) => {
     dispatch({type: SET_SESSION_TIME, sessionStartTime: time});
   };
@@ -801,6 +802,12 @@ export function setCurrentPageId(pageId){
 export function setUser(user){
   return (dispatch) => {
     dispatch({type: SET_USER, user});
+  }
+}
+
+export function setCurrentTime(time){
+  return (dispatch) => {
+    dispatch({type: SET_CURRENT_TIME, time});
   }
 }
 

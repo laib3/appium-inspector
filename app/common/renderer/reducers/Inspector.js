@@ -88,7 +88,8 @@ import {
   ADD_INTERACTED_WIDGET,
   ADD_PAGE,
   SET_PAGE_ID,
-  SET_USER
+  SET_USER,
+  SET_CURRENT_TIME
 } from '../actions/Inspector';
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot';
 import {APP_MODE, INSPECTOR_TABS, NATIVE_APP} from '../constants/session-inspector';
@@ -96,33 +97,33 @@ import {APP_MODE, INSPECTOR_TABS, NATIVE_APP} from '../constants/session-inspect
 const DEFAULT_FRAMEWORK = 'java';
 
 const INITIAL_STATE = {
-  savedGestures: [],
-  driver: null,
-  automationName: null,
-  keepAliveInterval: null,
-  showKeepAlivePrompt: false,
-  userWaitTimeout: null,
-  lastActiveMoment: null,
-  expandedPaths: ['0'],
-  isRecording: false,
-  isSourceRefreshOn: true,
-  showBoilerplate: false,
-  recordedActions: [],
-  actionFramework: DEFAULT_FRAMEWORK,
-  sessionDetails: {},
-  sessionSettings: {},
-  isGestureEditorVisible: false,
-  isLocatorTestModalVisible: false,
-  isSiriCommandModalVisible: false,
-  siriCommandValue: '',
-  showCentroids: false,
-  locatorTestStrategy: 'id',
-  locatorTestValue: '',
-  isSearchingForElements: false,
-  assignedVarCache: {},
-  screenshotInteractionMode: SCREENSHOT_INTERACTION_MODE.SELECT,
-  searchedForElementBounds: null,
-  selectedInspectorTab: INSPECTOR_TABS.GAMIFICATION,
+savedGestures: [],
+driver: null,
+automationName: null,
+keepAliveInterval: null,
+showKeepAlivePrompt: false,
+userWaitTimeout: null,
+lastActiveMoment: null,
+expandedPaths: ['0'],
+isRecording: false,
+isSourceRefreshOn: true,
+showBoilerplate: false,
+recordedActions: [],
+actionFramework: DEFAULT_FRAMEWORK,
+sessionDetails: {},
+sessionSettings: {},
+isGestureEditorVisible: false,
+isLocatorTestModalVisible: false,
+isSiriCommandModalVisible: false,
+siriCommandValue: '',
+showCentroids: false,
+locatorTestStrategy: 'id',
+locatorTestValue: '',
+isSearchingForElements: false,
+assignedVarCache: {},
+screenshotInteractionMode: SCREENSHOT_INTERACTION_MODE.SELECT,
+searchedForElementBounds: null,
+selectedInspectorTab: INSPECTOR_TABS.GAMIFICATION,
   appMode: APP_MODE.NATIVE,
   mjpegScreenshotUrl: null,
   pendingCommand: null,
@@ -543,6 +544,12 @@ export default function inspector(state = INITIAL_STATE, action) {
       return {
         ...state,
         user: action.user
+      }
+
+    case SET_CURRENT_TIME:
+      return {
+        ...state,
+        currentTime: action.time
       }
 
     case SET_APP_MODE:

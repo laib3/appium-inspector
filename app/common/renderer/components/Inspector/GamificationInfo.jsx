@@ -19,10 +19,7 @@ import {notification} from 'antd';
 
 import {GAMIFICATION_INFO_PROPS, GAMIFICATION_INFO_TABLE_PARAMS} from '../../constants/gamification';
 import InspectorStyles from './Inspector.module.css';
-import Source from './Source.jsx'
 let getSessionData;
-
-const {Title} = Typography;
 
 // a simple algorithm to build a page id from its content:
 // just concatenate the name of each widget.
@@ -47,7 +44,7 @@ const countWidgets = (json) => {
 const GamificationInfo = (props) => {
   const {driver, t, pages, currentPageId, 
     nInteractedSessionWidgets, nInteractableSessionWidgets, sourceJSON,
-    user, setUser} = props;
+    user, setUser, currentTime, setCurrentTime} = props;
 
   const gamificationArray = Object.keys(GAMIFICATION_INFO_PROPS).map((key) => [
     key,
@@ -94,22 +91,8 @@ const GamificationInfo = (props) => {
     }
   }
 
-  const generateSessionTime = () => {
-    const {sessionStartTime} = props;
-    const currentTime = Date.now();
-    const timeDiff = currentTime - sessionStartTime;
-
-    const hours = timeDiff / 3600000;
-    const minutes = (hours - Math.floor(hours)) * 60;
-    const seconds = (minutes - Math.floor(minutes)) * 60;
-
-    const showTime = (time) => String(Math.floor(time)).padStart(2, '0');
-
-    return `${showTime(hours)}:${showTime(minutes)}:${showTime(seconds)}`;
-  };
-
   const interval = useRef();
-  const [time, setTime] = useState(generateSessionTime());
+  const startTime = useRef(Date.now());
 
   const getTable = (tableValues, keyName, outerTable) => {
     const keyValue = `${keyName}_value`;
@@ -118,8 +101,6 @@ const GamificationInfo = (props) => {
       [keyName]: outerTable ? t(value) : name,
       [keyValue]: value,
     }));
-
-    const newPagesFound = 0;
 
     const columns = [
       {
@@ -163,7 +144,7 @@ const GamificationInfo = (props) => {
                   </Row>
                 </div>
                 <div style={{paddingTop: '16px', paddingBottom: '16px'}}>
-                  <div style={{paddingBottom: '4px'}}><b>New Pages Found:</b> {newPagesFound}</div>
+                  <div style={{paddingBottom: '4px'}}><b>New Pages Found:</b> {pages.length - 1}</div>
                   <div><b>Current Page Coverage:</b></div>
                   <Progress
                     percent={currentPageId === null ? 0 : getCurrentPageCoverage()}
@@ -211,7 +192,7 @@ const GamificationInfo = (props) => {
       case 'Session URL':
         return sessionUrl;
       case 'Session Length':
-        return time;
+        return currentTime;
       case 'Currently Active App ID':
         return appId;
       case 'Number of Interacted Widgets':
@@ -223,6 +204,16 @@ const GamificationInfo = (props) => {
     }
   };
 
+  function updateTime(){
+    const timeDiff = Date.now() - startTime.current;
+    const hours = timeDiff / 3600000;
+    const minutes = (hours - Math.floor(hours)) * 60;
+    const seconds = (minutes - Math.floor(minutes)) * 60;
+    const showTime = (time) => String(Math.floor(time)).padStart(2, '0');
+    const timeString = `${showTime(hours)}:${showTime(minutes)}:${showTime(seconds)}`
+    setCurrentTime(timeString);
+  }
+
   useEffect(() => {
     const {getActiveAppId, getServerStatus, applyClientMethod} = props;
     const {isIOS, isAndroid} = driver.client;
@@ -231,10 +222,8 @@ const GamificationInfo = (props) => {
     getServerStatus();
 
     (async () => (getSessionData = await applyClientMethod({methodName: 'getSession'})))();
-    interval.current = setInterval(() => {
-      setTime(generateSessionTime());
-      // TODO: logTime
-    }, 1000);
+
+    interval.current = setInterval(updateTime, 1000);
 
     return () => clearInterval(interval.current); // cleanup
   }, []); 

@@ -159,6 +159,8 @@ const SelectedElementGamified = (props) => {
     tapIcon = <LoadingOutlined />;
   }
 
+  dataSource = [{"name": "class", "value": selectedElement.attributes.class}];
+
   return (
     <div>
       {
@@ -237,6 +239,7 @@ const SelectedElementGamified = (props) => {
           </Tooltip>
         </Button.Group>
       </Row>
+    {/*
       {findDataSource.length > 0 && (
         <Row className={styles.selectedElemContentRow}>
           <Spin spinning={isFindingElementsTimes}>
@@ -268,6 +271,16 @@ const SelectedElementGamified = (props) => {
           />
         </Row>
       )}
+    */}
+      <Row className={styles.selectedElemContentRow}>
+        <Table
+          columns={attributeColumns}
+          dataSource={dataSource}
+          size="small"
+          scroll={{x: 'max-content'}}
+          pagination={false}
+        />
+      </Row>
     </div>
   );
 };
