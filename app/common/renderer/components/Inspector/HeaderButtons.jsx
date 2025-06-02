@@ -9,16 +9,19 @@ import {
   ReloadOutlined,
   SearchOutlined,
   VideoCameraOutlined,
+  DownloadOutlined,
 } from '@ant-design/icons';
-import {Button, Select, Space, Tooltip} from 'antd';
+import {Button, Select, Space, Tooltip, notification} from 'antd';
 import {BiCircle, BiSquare} from 'react-icons/bi';
 import {HiOutlineHome, HiOutlineMicrophone} from 'react-icons/hi';
 import {IoChevronBackOutline} from 'react-icons/io5';
+import _ from 'lodash';
+import {createHash} from 'node:crypto';
 
 import {BUTTON} from '../../constants/antd-types';
 import {LINKS} from '../../constants/common';
 import {APP_MODE} from '../../constants/session-inspector';
-import {openLink} from '../../polyfills';
+import {openLink, saveJSON} from '../../polyfills';
 import InspectorStyles from './Inspector.module.css';
 
 const HeaderButtons = (props) => {
@@ -210,10 +213,23 @@ const HeaderButtons = (props) => {
     </Button.Group>
   );
 
+  const downloadSessionReport = () => {
+    const obj = _.omit(props, ['i18n', 'sourceJSON', 'sourceXML', 'screenshot']);
+    const json = JSON.stringify(obj);
+    const digest = createHash("sha256").update(json, "utf8").digest('hex');
+    saveJSON(JSON.stringify({...obj, digest}));
+    notification.success({message: `Report salvato nel file "report.json".`});
+  }
+
   const quitSessionButton = (
-    <Tooltip title={t('Quit Session')}>
-      <Button id="btnClose" icon={<CloseOutlined />} onClick={quitCurrentSession} />
-    </Tooltip>
+    <Button.Group>
+      <Tooltip title={t('Download Session Report')}>
+        <Button id="btnClose" icon={<DownloadOutlined />} onClick={downloadSessionReport} />
+      </Tooltip>
+      <Tooltip title={t('Quit Session')}>
+        <Button id="btnClose" icon={<CloseOutlined />} onClick={quitCurrentSession} />
+      </Tooltip>
+    </Button.Group>
   );
 
   return (
