@@ -89,7 +89,8 @@ import {
   ADD_PAGE,
   SET_PAGE_ID,
   SET_USER,
-  SET_CURRENT_TIME
+  SET_CURRENT_TIME,
+  ADD_BADGE
 } from '../actions/Inspector';
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot';
 import {APP_MODE, INSPECTOR_TABS, NATIVE_APP} from '../constants/session-inspector';
@@ -124,24 +125,25 @@ assignedVarCache: {},
 screenshotInteractionMode: SCREENSHOT_INTERACTION_MODE.SELECT,
 searchedForElementBounds: null,
 selectedInspectorTab: INSPECTOR_TABS.GAMIFICATION,
-  appMode: APP_MODE.NATIVE,
-  mjpegScreenshotUrl: null,
-  pendingCommand: null,
-  findElementsExecutionTimes: [],
-  isFindingElementsTimes: false,
-  isFindingLocatedElementInSource: false,
-  visibleCommandResult: null,
-  visibleCommandMethod: null,
-  isAwaitingMjpegStream: true,
-  showSourceAttrs: false,
-  gestureUploadErrors: null,
-  // gamification extension
-  nInteractedSessionWidgets: 0,
-  nInteractableSessionWidgets: 0,
-  interactedWidgetIds: [],
-  pages: [],
-  user: null,
-  currentPageId: null,
+appMode: APP_MODE.NATIVE,
+mjpegScreenshotUrl: null,
+pendingCommand: null,
+findElementsExecutionTimes: [],
+isFindingElementsTimes: false,
+isFindingLocatedElementInSource: false,
+visibleCommandResult: null,
+visibleCommandMethod: null,
+isAwaitingMjpegStream: true,
+showSourceAttrs: false,
+gestureUploadErrors: null,
+// gamification extension
+nInteractedSessionWidgets: 0,
+nInteractableSessionWidgets: 0,
+interactedWidgetIds: [],
+pages: [],
+user: null,
+currentPageId: null,
+badges: [],
 };
 
 let nextState;
@@ -550,6 +552,12 @@ export default function inspector(state = INITIAL_STATE, action) {
       return {
         ...state,
         currentTime: action.time
+      }
+
+    case ADD_BADGE:
+      return {
+        ...state,
+        badges: [...state.badges, action.badge]
       }
 
     case SET_APP_MODE:

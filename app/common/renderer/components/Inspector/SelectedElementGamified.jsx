@@ -6,10 +6,11 @@ import {
   LoadingOutlined,
   SendOutlined,
 } from '@ant-design/icons';
-import {Alert, Button, Col, Input, Row, Spin, Table, Tooltip, notification} from 'antd';
+import {Alert, Button, Col, Input, Row, Spin, Table, Tooltip} from 'antd';
 import _ from 'lodash';
 import React, {useRef} from 'react';
 
+import {GAMIFICATION_BADGES} from '../../constants/gamification';
 import {ALERT, ROW} from '../../constants/antd-types';
 import {LINKS} from '../../constants/common';
 import {NATIVE_APP} from '../../constants/session-inspector';
@@ -33,12 +34,20 @@ const SelectedElementGamified = (props) => {
     selectedElementSearchInProgress,
     addInteractedWidget,
     interactedWidgetIds,
+    badges,
+    addBadge,
     t,
   } = props;
 
   const sendKeys = useRef();
 
   const isDisabled = selectedElementSearchInProgress || isFindingElementsTimes;
+
+  const checkForBadges = () => {
+    if(badges.every(b => b.id !== "first-interaction")){ // first interaction
+      addBadge(GAMIFICATION_BADGES.find(badge => badge.id === "first-interaction"));
+    }
+  };
 
   const selectedElementTableCell = (text, copyToClipBoard) => {
     if (copyToClipBoard) {
@@ -183,9 +192,11 @@ const SelectedElementGamified = (props) => {
               if (!interactedWidgetIds.some((wid) => wid === selectedElementId))
                 addInteractedWidget(selectedElementId);
                 // also send a notification for the interaction that just happened
-                notification.success({
-                  message: "First Badge: You interacted with a new widget!"
-                });
+                // notification.success({
+                //   message: "First Badge: You interacted with a new widget!"
+                // });
+              // TODO check if badges have changed and possibly update the state
+              checkForBadges();
             }}
           />
         </Tooltip>
@@ -278,6 +289,7 @@ const SelectedElementGamified = (props) => {
           dataSource={dataSource}
           size="small"
           scroll={{x: 'max-content'}}
+          bordered={true}
           pagination={false}
         />
       </Row>

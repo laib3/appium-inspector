@@ -12,6 +12,7 @@ import {
   SelectOutlined,
   TagOutlined,
   ThunderboltOutlined,
+  TrophyOutlined,
 } from '@ant-design/icons';
 import {Button, Card, Modal, Space, Spin, Switch, Tabs, Tooltip, Col} from 'antd';
 import {debounce} from 'lodash';
@@ -40,6 +41,8 @@ import SessionInfo from './SessionInfo.jsx';
 import GamificationInfo from './GamificationInfo.jsx';
 import Source from './Source.jsx';
 import SelectedElementGamified from './SelectedElementGamified';
+import Badges from './Badges';
+import Leaderboards from './Leaderboards';
 
 const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
 
@@ -309,17 +312,28 @@ const Inspector = (props) => {
                     className={`${InspectorStyles['interaction-tab-container']} ${InspectorStyles['element-detail-container']} action-col`}
                   >
                   <Col>
-                    <Card
-                      title={
-                        <span>
-                          <TagOutlined /> {t('selectedElement')}
-                        </span>
-                      }
-                      className={InspectorStyles['selected-element-card']}
-                    >
-                      {selectedElement.path && <SelectedElementGamified {...props} />}
-                      {!selectedElement.path && <i>{t('selectElementInSource')}</i>}
-                    </Card>
+                    <Space direction="vertical" size="middle" style={{ display: "flex" }}>
+                      <Card
+                        title={
+                          <span>
+                            <TagOutlined /> {t('selectedElement')}
+                          </span>
+                        }
+                        className={InspectorStyles['selected-element-card']}
+                      >
+                        {selectedElement.path && <SelectedElementGamified {...props} />}
+                        {!selectedElement.path && <i>{t('selectElementInSource')}</i>}
+                      </Card>
+                      <Card
+                        title={<span><TrophyOutlined /> {"Badges and Leaderboards"}</span>}
+                        className={InspectorStyles['selected-element-card']}
+                      >
+                        <Space direction="vertical" style={{display: "flex"}}>
+                          <Badges {...props}/>
+                          <Leaderboards {...props}/>
+                        </Space>
+                      </Card>
+                    </Space>
                   </Col>
                   </div>
                 </div>

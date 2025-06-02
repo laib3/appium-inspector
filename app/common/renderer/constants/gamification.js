@@ -12,3 +12,10 @@ export const GAMIFICATION_INFO_TABLE_PARAMS = {
   SCROLL_DISTANCE_Y: 104,
   COLUMN_WIDTH: 200,
 };
+
+export const GAMIFICATION_BADGES = [
+  { id: "first-interaction", title: "First Interaction", description: "You performed your first interaction!"},
+  { id: "page-explorer", title: "Page Explorer", description: "You explored more than 10 pages!" },
+  { id: "record-breaker", title: "Record Breaker", description: "You performed a new record!"},
+  { id: "your-name", title: "Your Name", description: "You changed your user name once!"},
+];

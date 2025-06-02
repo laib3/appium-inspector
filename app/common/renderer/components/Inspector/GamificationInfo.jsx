@@ -17,7 +17,7 @@ import {Col, Row, Table, Progress, Input, Typography} from 'antd';
 import {useEffect, useRef, useState} from 'react';
 import {notification} from 'antd';
 
-import {GAMIFICATION_INFO_PROPS, GAMIFICATION_INFO_TABLE_PARAMS} from '../../constants/gamification';
+import {GAMIFICATION_INFO_PROPS, GAMIFICATION_INFO_TABLE_PARAMS, GAMIFICATION_BADGES} from '../../constants/gamification';
 import InspectorStyles from './Inspector.module.css';
 let getSessionData;
 
@@ -44,7 +44,7 @@ const countWidgets = (json) => {
 const GamificationInfo = (props) => {
   const {driver, t, pages, currentPageId, 
     nInteractedSessionWidgets, nInteractableSessionWidgets, sourceJSON,
-    user, setUser, currentTime, setCurrentTime} = props;
+    user, setUser, currentTime, setCurrentTime, addBadge, badges} = props;
 
   const gamificationArray = Object.keys(GAMIFICATION_INFO_PROPS).map((key) => [
     key,
@@ -125,7 +125,12 @@ const GamificationInfo = (props) => {
                     size="large" 
                     placeholder="UserName"
                     prefix={user === null ? "?" : pickIcon(user.icon)}
-                    onBlur={(e) => { setUser({...user, name: e.target.value}); }}
+                    onBlur={(e) => { 
+                      setUser({...user, name: e.target.value}); 
+                      if(badges.every(b => b.id !== "your-name")){
+                        addBadge(GAMIFICATION_BADGES.find(b => b.id === "your-name"))
+                      }
+                    }}
                   >
                   </Input>
                 </div>
@@ -144,7 +149,7 @@ const GamificationInfo = (props) => {
                   </Row>
                 </div>
                 <div style={{paddingTop: '16px', paddingBottom: '16px'}}>
-                  <div style={{paddingBottom: '4px'}}><b>New Pages Found:</b> {pages.length - 1}</div>
+                  <div style={{paddingBottom: '4px'}}><b>New Pages Found:</b> {pages.length > 0 ? pages.length - 1 : 0}</div>
                   <div><b>Current Page Coverage:</b></div>
                   <Progress
                     percent={currentPageId === null ? 0 : getCurrentPageCoverage()}
@@ -215,13 +220,15 @@ const GamificationInfo = (props) => {
   }
 
   useEffect(() => {
-    const {getActiveAppId, getServerStatus, applyClientMethod} = props;
+    const {getActiveAppId, getServerStatus, applyClientMethod, setSessionStartTime} = props;
     const {isIOS, isAndroid} = driver.client;
 
     getActiveAppId(isIOS, isAndroid);
     getServerStatus();
 
     (async () => (getSessionData = await applyClientMethod({methodName: 'getSession'})))();
+
+    setSessionStartTime(startTime.current);
 
     interval.current = setInterval(updateTime, 1000);
 
