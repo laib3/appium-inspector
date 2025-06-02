@@ -14,10 +14,10 @@ import {
   ThunderboltFilled
 } from '@ant-design/icons';
 import {Col, Row, Table, Progress, Input, Typography} from 'antd';
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useRef} from 'react';
 import {notification} from 'antd';
 
-import {GAMIFICATION_INFO_PROPS, GAMIFICATION_INFO_TABLE_PARAMS, GAMIFICATION_BADGES} from '../../constants/gamification';
+import {GAMIFICATION_INFO_PROPS, GAMIFICATION_INFO_TABLE_PARAMS, GAMIFICATION_BADGES, COVERAGE_THRESHOLD} from '../../constants/gamification';
 import InspectorStyles from './Inspector.module.css';
 let getSessionData;
 
@@ -56,7 +56,11 @@ const GamificationInfo = (props) => {
       return 0;
     } else {
       const currentPage = pages.find(p => p.pageId === currentPageId);
-      return Math.round(100 * currentPage.nInteractedWidgets / currentPage.nInteractableWidgets)
+      const coverage = Math.round(100 * currentPage.nInteractedWidgets / currentPage.nInteractableWidgets);
+      if(coverage > COVERAGE_THRESHOLD && badges.every(b => b.id !== "high-coverage")){
+        addBadge(GAMIFICATION_BADGES.find(b => b.id === "high-coverage"))
+      }
+      return coverage;
     }
   }
 
@@ -268,7 +272,7 @@ const GamificationInfo = (props) => {
     const random_idx = Math.round(100 * Math.random() % icons.length);
     const random_icon = icons[random_idx];
     if(user === null){ // generate random user name and icon
-      setUser({ name : `user${random_idx}`, icon: `${random_icon}` });
+      setUser({ name : ``, icon: `${random_icon}` });
     }
   }, []);
 

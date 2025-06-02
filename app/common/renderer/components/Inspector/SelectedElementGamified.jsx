@@ -250,39 +250,6 @@ const SelectedElementGamified = (props) => {
           </Tooltip>
         </Button.Group>
       </Row>
-    {/*
-      {findDataSource.length > 0 && (
-        <Row className={styles.selectedElemContentRow}>
-          <Spin spinning={isFindingElementsTimes}>
-            <Table
-              columns={findColumns}
-              dataSource={findDataSource}
-              size="small"
-              scroll={{x: 'max-content'}}
-              pagination={false}
-            />
-          </Spin>
-        </Row>
-      )}
-      <br />
-      {currentContext === NATIVE_APP && showXpathWarning && (
-        <div>
-          <Alert message={t('usingXPathNotRecommended')} type={ALERT.WARNING} showIcon />
-          <br />
-        </div>
-      )}
-      {dataSource.length > 0 && (
-        <Row className={styles.selectedElemContentRow}>
-          <Table
-            columns={attributeColumns}
-            dataSource={dataSource}
-            size="small"
-            scroll={{x: 'max-content'}}
-            pagination={false}
-          />
-        </Row>
-      )}
-    */}
       <Row className={styles.selectedElemContentRow}>
         <Table
           columns={attributeColumns}

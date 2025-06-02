@@ -813,9 +813,11 @@ export function setCurrentTime(time){
 }
 
 export function addBadge(badge){
-  return (dispatch) => {
-    dispatch({type: ADD_BADGE, badge});
-  }
+    return (dispatch, getState) => {
+      const {badges} = getState().inspector;
+      if(badges.every(b => b.id !== badge.id)) // add badge only if it was not present
+        dispatch({type: ADD_BADGE, badge});
+    }
 }
 
 export function addPage(page){
