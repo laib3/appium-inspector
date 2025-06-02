@@ -6,7 +6,7 @@ import {
   LoadingOutlined,
   SendOutlined,
 } from '@ant-design/icons';
-import {Alert, Button, Col, Input, Row, Spin, Table, Tooltip} from 'antd';
+import {Alert, Button, Col, Input, Row, Spin, Table, Tooltip, Space} from 'antd';
 import _ from 'lodash';
 import React, {useRef} from 'react';
 
@@ -171,7 +171,7 @@ const SelectedElementGamified = (props) => {
   dataSource = [{"name": "class", "value": selectedElement.attributes.class}];
 
   return (
-    <div>
+    <Space direction="vertical" style={{display: "flex"}}>
       {
         elementInteractionsNotAvailable && (
           <Row type={ROW.FLEX} gutter={10} className={styles.selectedElemNotInteractableAlertRow}>
@@ -191,12 +191,7 @@ const SelectedElementGamified = (props) => {
               applyClientMethod({methodName: 'click', elementId: selectedElementId});
               if (!interactedWidgetIds.some((wid) => wid === selectedElementId))
                 addInteractedWidget(selectedElementId);
-                // also send a notification for the interaction that just happened
-                // notification.success({
-                //   message: "First Badge: You interacted with a new widget!"
-                // });
-              // TODO check if badges have changed and possibly update the state
-              checkForBadges();
+                checkForBadges();
             }}
           />
         </Tooltip>
@@ -260,7 +255,7 @@ const SelectedElementGamified = (props) => {
           pagination={false}
         />
       </Row>
-    </div>
+    </Space>
   );
 };
 
