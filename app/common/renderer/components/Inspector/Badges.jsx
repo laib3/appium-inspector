@@ -1,9 +1,11 @@
-import {Space, Alert, Button, Col, Input, Row, Spin, Table, Tooltip, notification, Card} from 'antd';
+import {Col, Space, Typography, notification, Card} from 'antd';
+const {Title} = Typography;
 import {
   FundTwoTone, // first interaction 
   EditTwoTone, // your name
   PlusSquareTwoTone, // page explorer
   SecurityScanTwoTone, // high coverage 
+  CrownTwoTone, // record breaker
 } from '@ant-design/icons';
 import React from 'react';
 import {useEffect} from 'react';
@@ -41,22 +43,27 @@ const Badges = (props) => {
         return <PlusSquareTwoTone twoToneColor="#eb2f96"/>;
       case "high-coverage":
         return <SecurityScanTwoTone twoToneColor="#eb2f96"/>;
+      case "record-breaker":
+        return <CrownTwoTone twoToneColor="#eb2f96" />;
     }
   }
 
   const renderBadges = badges.map((badge) => {
-    return <Card
+    return <>
+      <Card
         title={<span>{getIcon(badge.id)}<b> {badge.title}</b></span>}
         style={{width: 150}}
       >
         <p>{badge.description}</p>
       </Card>
+    </>
   });
 
   return (
-    <Space>
-      {renderBadges}
-    </Space>
+    <Col>
+      <Title level={4}>Badges</Title>
+      <Space>{renderBadges}</Space>
+    </Col>
   )
 };
 

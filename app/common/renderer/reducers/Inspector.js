@@ -90,7 +90,7 @@ import {
   SET_PAGE_ID,
   SET_USER,
   SET_CURRENT_TIME,
-  ADD_BADGE
+  ADD_BADGE,
 } from '../actions/Inspector';
 import {SCREENSHOT_INTERACTION_MODE} from '../constants/screenshot';
 import {APP_MODE, INSPECTOR_TABS, NATIVE_APP} from '../constants/session-inspector';
@@ -98,52 +98,53 @@ import {APP_MODE, INSPECTOR_TABS, NATIVE_APP} from '../constants/session-inspect
 const DEFAULT_FRAMEWORK = 'java';
 
 const INITIAL_STATE = {
-savedGestures: [],
-driver: null,
-automationName: null,
-keepAliveInterval: null,
-showKeepAlivePrompt: false,
-userWaitTimeout: null,
-lastActiveMoment: null,
-expandedPaths: ['0'],
-isRecording: false,
-isSourceRefreshOn: true,
-showBoilerplate: false,
-recordedActions: [],
-actionFramework: DEFAULT_FRAMEWORK,
-sessionDetails: {},
-sessionSettings: {},
-isGestureEditorVisible: false,
-isLocatorTestModalVisible: false,
-isSiriCommandModalVisible: false,
-siriCommandValue: '',
-showCentroids: false,
-locatorTestStrategy: 'id',
-locatorTestValue: '',
-isSearchingForElements: false,
-assignedVarCache: {},
-screenshotInteractionMode: SCREENSHOT_INTERACTION_MODE.SELECT,
-searchedForElementBounds: null,
-selectedInspectorTab: INSPECTOR_TABS.GAMIFICATION,
-appMode: APP_MODE.NATIVE,
-mjpegScreenshotUrl: null,
-pendingCommand: null,
-findElementsExecutionTimes: [],
-isFindingElementsTimes: false,
-isFindingLocatedElementInSource: false,
-visibleCommandResult: null,
-visibleCommandMethod: null,
-isAwaitingMjpegStream: true,
-showSourceAttrs: false,
-gestureUploadErrors: null,
-// gamification extension
-nInteractedSessionWidgets: 0,
-nInteractableSessionWidgets: 0,
-interactedWidgetIds: [],
-pages: [],
-user: null,
-currentPageId: null,
-badges: [],
+  savedGestures: [],
+  driver: null,
+  automationName: null,
+  keepAliveInterval: null,
+  showKeepAlivePrompt: false,
+  userWaitTimeout: null,
+  lastActiveMoment: null,
+  expandedPaths: ['0'],
+  isRecording: false,
+  isSourceRefreshOn: true,
+  showBoilerplate: false,
+  recordedActions: [],
+  actionFramework: DEFAULT_FRAMEWORK,
+  sessionDetails: {},
+  sessionSettings: {},
+  isGestureEditorVisible: false,
+  isLocatorTestModalVisible: false,
+  isSiriCommandModalVisible: false,
+  siriCommandValue: '',
+  showCentroids: false,
+  locatorTestStrategy: 'id',
+  locatorTestValue: '',
+  isSearchingForElements: false,
+  assignedVarCache: {},
+  screenshotInteractionMode: SCREENSHOT_INTERACTION_MODE.SELECT,
+  searchedForElementBounds: null,
+  selectedInspectorTab: INSPECTOR_TABS.GAMIFICATION,
+  appMode: APP_MODE.NATIVE,
+  mjpegScreenshotUrl: null,
+  pendingCommand: null,
+  findElementsExecutionTimes: [],
+  isFindingElementsTimes: false,
+  isFindingLocatedElementInSource: false,
+  visibleCommandResult: null,
+  visibleCommandMethod: null,
+  isAwaitingMjpegStream: true,
+  showSourceAttrs: false,
+  gestureUploadErrors: null,
+  // gamification extension
+  nInteractedSessionWidgets: 0,
+  nInteractableSessionWidgets: 0,
+  interactedWidgetIds: [],
+  pages: [],
+  user: null,
+  currentPageId: null,
+  badges: [],
+  score: 0,
 };
 
 let nextState;
@@ -521,19 +522,33 @@ export default function inspector(state = INITIAL_STATE, action) {
         ...state,
         interactedWidgetIds: [...state.interactedWidgetIds, action.selectedElementId],
         nInteractedSessionWidgets: state.nInteractedSessionWidgets + 1,
+        score: state.score + 3, // a new widget is worth 3 points
         pages: state.pages.map(p => { 
-          if(p.pageId === state.currentPageId)
+          if(p.pageId === state.currentPageId){
             return {...p, nInteractedWidgets: p.nInteractedWidgets + 1}; // increment the number of interacted widgets also in current page
-          else 
+          }
+          else {
             return p;
+          }
         })
       };
 
     case ADD_PAGE:
-      return {
-        ...state,
-        pages: [...state.pages, action.page],
-        nInteractableSessionWidgets: state.nInteractableSessionWidgets + action.page.nInteractableWidgets
+      if(state.pages.length > 0){
+        return {
+          ...state,
+          pages: [...state.pages, action.page],
+          nInteractableSessionWidgets: state.nInteractableSessionWidgets + action.page.nInteractableWidgets,
+          score: state.score + 10, // a new page is worth 10 points
+        }
+      }
+      else {
+        return {
+          ...state,
+          pages: [...state.pages, action.page],
+          nInteractableSessionWidgets: state.nInteractableSessionWidgets + action.page.nInteractableWidgets,
+          // do not update the score for the first page
+        }
       }
 
     case SET_PAGE_ID:
@@ -557,7 +572,8 @@ export default function inspector(state = INITIAL_STATE, action) {
     case ADD_BADGE:
       return {
         ...state,
-        badges: [...state.badges, action.badge]
+        score: state.score + 10, // a new badge is worth 10 points
+        badges: [...state.badges, action.badge],
       }
 
     case SET_APP_MODE:

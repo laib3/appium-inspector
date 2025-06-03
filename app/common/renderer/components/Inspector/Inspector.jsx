@@ -14,7 +14,7 @@ import {
   ThunderboltOutlined,
   TrophyOutlined,
 } from '@ant-design/icons';
-import {Button, Card, Modal, Space, Spin, Switch, Tabs, Tooltip, Col} from 'antd';
+import {Button, Card, Modal, Space, Spin, Switch, Tabs, Tooltip, Col, Typography} from 'antd';
 import {debounce} from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 import {useNavigate} from 'react-router-dom';

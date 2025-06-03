@@ -13,9 +13,8 @@ import {
   SunFilled,
   ThunderboltFilled
 } from '@ant-design/icons';
-import {Col, Row, Table, Progress, Input, Typography} from 'antd';
+import {Col, Row, Table, Progress, Input} from 'antd';
 import {useEffect, useRef} from 'react';
-import {notification} from 'antd';
 
 import {GAMIFICATION_INFO_PROPS, GAMIFICATION_INFO_TABLE_PARAMS, GAMIFICATION_BADGES, COVERAGE_THRESHOLD} from '../../constants/gamification';
 import InspectorStyles from './Inspector.module.css';
@@ -244,7 +243,7 @@ const GamificationInfo = (props) => {
     const {setCurrentPageId, pages, addPage} = props;
     if(sourceJSON){
       const pageId = buildPageId(sourceJSON);
-      if(! pages.some(p => p.pageId == pageId)){ 
+      if(pages.every(p => p.pageId !== pageId)){ 
         const newPage = { pageId: pageId, nInteractableWidgets: countWidgets(sourceJSON), nInteractedWidgets: 0 };
         addPage(newPage);
         setCurrentPageId(pageId);
