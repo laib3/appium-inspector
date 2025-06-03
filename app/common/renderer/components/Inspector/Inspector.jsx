@@ -304,7 +304,7 @@ const Inspector = (props) => {
                       }
                       className={InspectorStyles['interaction-tab-card']}
                     >
-                      <GamificationInfo {...props} />
+                      <GamificationInfo quitCurrentSession={quitCurrentSession} {...props} />
                     </Card>
                   </div>
                   <div

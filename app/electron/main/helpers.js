@@ -21,7 +21,7 @@ export function setupIPCListeners() {
 export const openSessionFile = (filePath) => fs.readFileSync(filePath, 'utf8');
 
 export const saveJSONFile = (json) => {
-  fs.writeFileSync("report.json", json, 'utf8');
+  fs.writeFileSync(`report_${Date.now().toString()}.json`, json, 'utf8');
   notification.success({message: "file saved to report.json"});
 }
 

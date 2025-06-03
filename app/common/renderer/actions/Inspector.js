@@ -6,10 +6,11 @@ import {APP_MODE, NATIVE_APP} from '../constants/session-inspector';
 import i18n from '../i18next';
 import AppiumClient from '../lib/appium-client';
 import frameworks from '../lib/client-frameworks';
-import {getSetting, setSetting} from '../polyfills';
+import {getSetting, setSetting, saveJSON} from '../polyfills';
 import {readTextFromUploadedFiles} from '../utils/file-handling';
 import {getOptimalXPath, getSuggestedLocators} from '../utils/locator-generation';
 import {log} from '../utils/logger';
+import {createHash} from 'node:crypto';
 import {
   findDOMNodeByPath,
   findJSONElementByPath,
@@ -360,6 +361,11 @@ export function setExpandedPaths(paths) {
  */
 export function quitSession(reason, killedByUser = true) {
   return async (dispatch, getState) => {
+    const state = getState().inspector;
+    const obj = _.omit(state, ['i18n', 'sourceJSON', 'sourceXML', 'screenshot']); 
+    const json = JSON.stringify(obj);
+    const digest = createHash("sha256").update(json, "utf8").digest("hex");
+    saveJSON(JSON.stringify({...obj, digest}));
     const killAction = killKeepAliveLoop();
     killAction(dispatch, getState);
     const applyAction = applyClientMethod({methodName: 'quit'});

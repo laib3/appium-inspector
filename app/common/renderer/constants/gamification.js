@@ -15,6 +15,7 @@ export const GAMIFICATION_INFO_TABLE_PARAMS = {
 
 export const PAGE_THRESHOLD = 15;
 export const COVERAGE_THRESHOLD = 50;
+export const SESSION_DURATION = 30; // duration in minutes
 
 export const GAMIFICATION_BADGES = [
   { id: "first-interaction", title: "First Interaction", description: "You performed your first interaction!"},

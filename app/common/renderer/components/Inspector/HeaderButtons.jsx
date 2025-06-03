@@ -218,7 +218,7 @@ const HeaderButtons = (props) => {
     const json = JSON.stringify(obj);
     const digest = createHash("sha256").update(json, "utf8").digest('hex');
     saveJSON(JSON.stringify({...obj, digest}));
-    notification.success({message: `Report salvato nel file "report.json".`});
+    notification.success({message: `Report saved into a json file.`});
   }
 
   const quitSessionButton = (

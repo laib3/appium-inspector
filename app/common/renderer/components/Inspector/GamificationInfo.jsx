@@ -13,10 +13,10 @@ import {
   SunFilled,
   ThunderboltFilled
 } from '@ant-design/icons';
-import {Col, Row, Table, Progress, Input} from 'antd';
-import {useEffect, useRef} from 'react';
+import {Col, Row, Table, Progress, Input, notification} from 'antd';
+import {useState, useEffect, useRef} from 'react';
 
-import {GAMIFICATION_INFO_PROPS, GAMIFICATION_INFO_TABLE_PARAMS, GAMIFICATION_BADGES, COVERAGE_THRESHOLD} from '../../constants/gamification';
+import {SESSION_DURATION, GAMIFICATION_INFO_PROPS, GAMIFICATION_INFO_TABLE_PARAMS, GAMIFICATION_BADGES, COVERAGE_THRESHOLD} from '../../constants/gamification';
 import InspectorStyles from './Inspector.module.css';
 let getSessionData;
 
@@ -34,13 +34,15 @@ const buildPageId = (json) => {
 /* all widgets may be interacted with Appium Inspector */
 const countWidgets = (json) => {
   let sum = 1;
-  for(const child of json.children){
+  for(const child of json.children){ 
     sum += countWidgets(child);
   }
   return sum;
 }
 
 const GamificationInfo = (props) => {
+  const [expWarningSent, setExpWarningSent] = useState(false);
+
   const {driver, t, pages, currentPageId, 
     nInteractedSessionWidgets, nInteractableSessionWidgets, sourceJSON,
     user, setUser, currentTime, setCurrentTime, addBadge, badges} = props;
@@ -213,14 +215,28 @@ const GamificationInfo = (props) => {
   };
 
   function updateTime(){
+    const {quitCurrentSession} = props;
     const timeDiff = Date.now() - startTime.current;
     const hours = timeDiff / 3600000;
     const minutes = (hours - Math.floor(hours)) * 60;
+    if(expWarningSent === false && minutes > SESSION_DURATION - 1){
+      setExpWarningSent(true);
+      // notification.warning({message: `Only 1 minute left. Session will close automatically.`})
+    }
+    if(minutes >= SESSION_DURATION){
+      notification.success({message: `${SESSION_DURATION} minutes have passed. Session finished.`});
+      quitCurrentSession("Time expired", true);
+    }
     const seconds = (minutes - Math.floor(minutes)) * 60;
     const showTime = (time) => String(Math.floor(time)).padStart(2, '0');
     const timeString = `${showTime(hours)}:${showTime(minutes)}:${showTime(seconds)}`
     setCurrentTime(timeString);
   }
+
+  useEffect(() => {
+    if(expWarningSent === true)
+      notification.warning({message: "Only 1 minute left!"});
+  }, [expWarningSent]);
 
   useEffect(() => {
     const {getActiveAppId, getServerStatus, applyClientMethod, setSessionStartTime} = props;
