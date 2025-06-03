@@ -1,12 +1,12 @@
 {
-  "productName": "Appium Inspector",
-  "appId": "io.appium.inspector",
+  "productName": "GAppium",
+  "appId": "io.gappium",
   "asar": true,
   "directories": {
     "output": "release"
   },
   "files": ["dist/"],
-  "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+  "artifactName": "${productName}-${os}-${arch}.${ext}",
   "fileAssociations": [
     {
       "ext": "appiumsession",
@@ -33,7 +33,7 @@
     ]
   },
   "win": {
-    "target": ["nsis", "zip"]
+    "target": ["portable"]
   },
   "nsis": {
     "oneClick": false
