@@ -23,4 +23,5 @@ export const GAMIFICATION_BADGES = [
   { id: "record-breaker", title: "Record Breaker", description: "You performed a new record!"},
   { id: "your-name", title: "Your Name", description: "You changed your username once!"},
   { id: "high-coverage", title: "High Coverage", description: `You gained more than ${COVERAGE_THRESHOLD}% coverage on a single page!`},
+  // aggiungere badge
 ];
