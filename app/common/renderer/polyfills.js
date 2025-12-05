@@ -25,4 +25,5 @@ export {
   i18NextBackendOptions,
   ipcRenderer,
   openLink,
+  saveJSON,
 } from '#local-polyfills'; // eslint-disable-line import/no-unresolved

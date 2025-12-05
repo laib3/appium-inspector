@@ -6,10 +6,11 @@ import {APP_MODE, NATIVE_APP} from '../constants/session-inspector';
 import i18n from '../i18next';
 import AppiumClient from '../lib/appium-client';
 import frameworks from '../lib/client-frameworks';
-import {getSetting, setSetting} from '../polyfills';
+import {getSetting, setSetting, saveJSON} from '../polyfills';
 import {readTextFromUploadedFiles} from '../utils/file-handling';
 import {getOptimalXPath, getSuggestedLocators} from '../utils/locator-generation';
 import {log} from '../utils/logger';
+import {createHash} from 'node:crypto';
 import {
   findDOMNodeByPath,
   findJSONElementByPath,
@@ -122,6 +123,8 @@ export const ADD_INTERACTED_WIDGET = 'ADD_INTERACTED_WIDGET';
 export const ADD_PAGE = 'ADD_PAGE';
 export const SET_PAGE_ID = 'SET_PAGE_ID';
 export const SET_USER = 'SET_USER';
+export const SET_CURRENT_TIME = 'SET_CURRENT_TIME';
+export const ADD_BADGE = 'ADD_BADGE';
 
 const KEEP_ALIVE_PING_INTERVAL = 20 * 1000;
 const NO_NEW_COMMAND_LIMIT = 24 * 60 * 60 * 1000; // Set timeout to 24 hours
@@ -358,6 +361,11 @@ export function setExpandedPaths(paths) {
  */
 export function quitSession(reason, killedByUser = true) {
   return async (dispatch, getState) => {
+    const state = getState().inspector;
+    const obj = _.omit(state, ['i18n', 'sourceJSON', 'sourceXML', 'screenshot']); 
+    const json = JSON.stringify(obj);
+    const digest = createHash("sha256").update(json, "utf8").digest("hex");
+    saveJSON(JSON.stringify({...obj, digest}));
     const killAction = killKeepAliveLoop();
     killAction(dispatch, getState);
     const applyAction = applyClientMethod({methodName: 'quit'});
@@ -756,7 +764,7 @@ export function getServerStatus() {
 }
 
 // Start the session timer once session starts
-export function setSessionTime(time) {
+export function setSessionStartTime(time) {
   return (dispatch) => {
     dispatch({type: SET_SESSION_TIME, sessionStartTime: time});
   };
@@ -802,6 +810,20 @@ export function setUser(user){
   return (dispatch) => {
     dispatch({type: SET_USER, user});
   }
+}
+
+export function setCurrentTime(time){
+  return (dispatch) => {
+    dispatch({type: SET_CURRENT_TIME, time});
+  }
+}
+
+export function addBadge(badge){
+    return (dispatch, getState) => {
+      const {badges} = getState().inspector;
+      if(badges.every(b => b.id !== badge.id)) // add badge only if it was not present
+        dispatch({type: ADD_BADGE, badge});
+    }
 }
 
 export function addPage(page){

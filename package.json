@@ -49,6 +49,19 @@
     "crowdin-sync": "node ./ci-jobs/crowdin-sync-translations.mjs",
     "crowdin-update": "node ./ci-jobs/crowdin-update-resources.mjs"
   },
+  "config": {
+	"forge": {
+		"packagerConfig": {},
+		"makers": [
+			{
+				"name": "@electron-forge/maker-zip",
+				"platforms": [
+					"darwin", "linux"
+				]
+			}
+		]
+	}
+  },
   "prettier": {
     "bracketSpacing": false,
     "printWidth": 100,
@@ -62,6 +75,7 @@
     "cheerio": "V1: requires Node 18"
   },
   "dependencies": {
+    "@electron-forge/cli": "^7.8.1",
     "@reduxjs/toolkit": "2.3.0",
     "@tomjs/electron-devtools-installer": "2.4.0",
     "@xmldom/xmldom": "0.9.5",
@@ -96,6 +110,7 @@
     "@appium/eslint-config-appium-ts": "0.3.3",
     "@appium/fake-driver": "5.5.5",
     "@appium/support": "5.1.6",
+    "@electron-forge/maker-zip": "^7.8.1",
     "@eslint/compat": "1.1.1",
     "@eslint/eslintrc": "3.2.0",
     "@eslint/js": "9.15.0",

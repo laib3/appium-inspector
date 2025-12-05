@@ -13,15 +13,12 @@ import {
   SunFilled,
   ThunderboltFilled
 } from '@ant-design/icons';
-import {Col, Row, Table, Progress, Input, Typography} from 'antd';
-import {useEffect, useRef, useState} from 'react';
+import {Col, Row, Table, Progress, Input, notification} from 'antd';
+import {useState, useEffect, useRef} from 'react';
 
-import {GAMIFICATION_INFO_PROPS, GAMIFICATION_INFO_TABLE_PARAMS} from '../../constants/gamification';
+import {SESSION_DURATION, GAMIFICATION_INFO_PROPS, GAMIFICATION_INFO_TABLE_PARAMS, GAMIFICATION_BADGES, COVERAGE_THRESHOLD} from '../../constants/gamification';
 import InspectorStyles from './Inspector.module.css';
-import Source from './Source.jsx'
 let getSessionData;
-
-const {Title} = Typography;
 
 // a simple algorithm to build a page id from its content:
 // just concatenate the name of each widget.
@@ -37,16 +34,18 @@ const buildPageId = (json) => {
 /* all widgets may be interacted with Appium Inspector */
 const countWidgets = (json) => {
   let sum = 1;
-  for(const child of json.children){
+  for(const child of json.children){ 
     sum += countWidgets(child);
   }
   return sum;
 }
 
 const GamificationInfo = (props) => {
+  const [expWarningSent, setExpWarningSent] = useState(false);
+
   const {driver, t, pages, currentPageId, 
     nInteractedSessionWidgets, nInteractableSessionWidgets, sourceJSON,
-    user, setUser} = props;
+    user, setUser, currentTime, setCurrentTime, addBadge, badges} = props;
 
   const gamificationArray = Object.keys(GAMIFICATION_INFO_PROPS).map((key) => [
     key,
@@ -58,7 +57,11 @@ const GamificationInfo = (props) => {
       return 0;
     } else {
       const currentPage = pages.find(p => p.pageId === currentPageId);
-      return Math.round(100 * currentPage.nInteractedWidgets / currentPage.nInteractableWidgets)
+      const coverage = Math.round(100 * currentPage.nInteractedWidgets / currentPage.nInteractableWidgets);
+      if(coverage > COVERAGE_THRESHOLD && badges.every(b => b.id !== "high-coverage")){
+        addBadge(GAMIFICATION_BADGES.find(b => b.id === "high-coverage"))
+      }
+      return coverage;
     }
   }
 
@@ -93,22 +96,8 @@ const GamificationInfo = (props) => {
     }
   }
 
-  const generateSessionTime = () => {
-    const {sessionStartTime} = props;
-    const currentTime = Date.now();
-    const timeDiff = currentTime - sessionStartTime;
-
-    const hours = timeDiff / 3600000;
-    const minutes = (hours - Math.floor(hours)) * 60;
-    const seconds = (minutes - Math.floor(minutes)) * 60;
-
-    const showTime = (time) => String(Math.floor(time)).padStart(2, '0');
-
-    return `${showTime(hours)}:${showTime(minutes)}:${showTime(seconds)}`;
-  };
-
   const interval = useRef();
-  const [time, setTime] = useState(generateSessionTime());
+  const startTime = useRef(Date.now());
 
   const getTable = (tableValues, keyName, outerTable) => {
     const keyValue = `${keyName}_value`;
@@ -141,7 +130,12 @@ const GamificationInfo = (props) => {
                     size="large" 
                     placeholder="UserName"
                     prefix={user === null ? "?" : pickIcon(user.icon)}
-                    onBlur={(e) => { setUser({...user, name: e.target.value}); }}
+                    onBlur={(e) => { 
+                      setUser({...user, name: e.target.value}); 
+                      if(badges.every(b => b.id !== "your-name")){
+                        addBadge(GAMIFICATION_BADGES.find(b => b.id === "your-name"))
+                      }
+                    }}
                   >
                   </Input>
                 </div>
@@ -160,21 +154,24 @@ const GamificationInfo = (props) => {
                   </Row>
                 </div>
                 <div style={{paddingTop: '16px', paddingBottom: '16px'}}>
-                  <div>Current Page Coverage:</div>
+                  <div style={{paddingBottom: '4px'}}><b>New Pages Found:</b> {pages.length > 0 ? pages.length - 1 : 0}</div>
+                  <div><b>Current Page Coverage:</b></div>
                   <Progress
                     percent={currentPageId === null ? 0 : getCurrentPageCoverage()}
                     showInfo={true}
                   ></Progress>
-                  <div>Incremental Coverage:</div>
+                  <div><b>Incremental Coverage:</b></div>
                   <Progress
                     percent={Math.round((100 * nInteractedSessionWidgets) / nInteractableSessionWidgets)}
                     showInfo={true}
                   ></Progress>
                 </div>
+                {/*}
                 <div id="sourceContainer">
                   <Title level={5}>Source</Title>
                   <Source {...props}></Source>
                 </div>
+                */}
               </div>
             ) : (
               <Table
@@ -205,7 +202,7 @@ const GamificationInfo = (props) => {
       case 'Session URL':
         return sessionUrl;
       case 'Session Length':
-        return time;
+        return currentTime;
       case 'Currently Active App ID':
         return appId;
       case 'Number of Interacted Widgets':
@@ -217,17 +214,42 @@ const GamificationInfo = (props) => {
     }
   };
 
+  function updateTime(){
+    const {quitCurrentSession} = props;
+    const timeDiff = Date.now() - startTime.current;
+    const hours = timeDiff / 3600000;
+    const minutes = (hours - Math.floor(hours)) * 60;
+    if(expWarningSent === false && minutes > SESSION_DURATION - 1){
+      setExpWarningSent(true);
+      // notification.warning({message: `Only 1 minute left. Session will close automatically.`})
+    }
+    if(minutes >= SESSION_DURATION){
+      notification.success({message: `${SESSION_DURATION} minutes have passed. Session finished.`});
+      quitCurrentSession("Time expired", true);
+    }
+    const seconds = (minutes - Math.floor(minutes)) * 60;
+    const showTime = (time) => String(Math.floor(time)).padStart(2, '0');
+    const timeString = `${showTime(hours)}:${showTime(minutes)}:${showTime(seconds)}`
+    setCurrentTime(timeString);
+  }
+
   useEffect(() => {
-    const {getActiveAppId, getServerStatus, applyClientMethod} = props;
+    if(expWarningSent === true)
+      notification.warning({message: "Only 1 minute left!"});
+  }, [expWarningSent]);
+
+  useEffect(() => {
+    const {getActiveAppId, getServerStatus, applyClientMethod, setSessionStartTime} = props;
     const {isIOS, isAndroid} = driver.client;
 
     getActiveAppId(isIOS, isAndroid);
     getServerStatus();
 
     (async () => (getSessionData = await applyClientMethod({methodName: 'getSession'})))();
-    interval.current = setInterval(() => {
-      setTime(generateSessionTime());
-    }, 1000);
+
+    setSessionStartTime(startTime.current);
+
+    interval.current = setInterval(updateTime, 1000);
 
     return () => clearInterval(interval.current); // cleanup
   }, []); 
@@ -237,7 +259,7 @@ const GamificationInfo = (props) => {
     const {setCurrentPageId, pages, addPage} = props;
     if(sourceJSON){
       const pageId = buildPageId(sourceJSON);
-      if(! pages.some(p => p.pageId == pageId)){ 
+      if(pages.every(p => p.pageId !== pageId)){ 
         const newPage = { pageId: pageId, nInteractableWidgets: countWidgets(sourceJSON), nInteractedWidgets: 0 };
         addPage(newPage);
         setCurrentPageId(pageId);
@@ -255,6 +277,9 @@ const GamificationInfo = (props) => {
       const {isIOS, isAndroid} = driver.client;
       getActiveAppId(isIOS, isAndroid);
     }
+    // notification.error({
+    //   message: "You interacted with a new widget!"
+    // });
   }, [nInteractedSessionWidgets]);
 
   useEffect(() => {
@@ -262,7 +287,7 @@ const GamificationInfo = (props) => {
     const random_idx = Math.round(100 * Math.random() % icons.length);
     const random_icon = icons[random_idx];
     if(user === null){ // generate random user name and icon
-      setUser({ name : `user${random_idx}`, icon: `${random_icon}` });
+      setUser({ name : ``, icon: `${random_icon}` });
     }
   }, []);
 

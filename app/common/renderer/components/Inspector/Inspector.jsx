@@ -12,8 +12,9 @@ import {
   SelectOutlined,
   TagOutlined,
   ThunderboltOutlined,
+  TrophyOutlined,
 } from '@ant-design/icons';
-import {Button, Card, Modal, Space, Spin, Switch, Tabs, Tooltip} from 'antd';
+import {Button, Card, Modal, Space, Spin, Switch, Tabs, Tooltip, Col, Typography} from 'antd';
 import {debounce} from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
@@ -40,6 +41,8 @@ import SessionInfo from './SessionInfo.jsx';
 import GamificationInfo from './GamificationInfo.jsx';
 import Source from './Source.jsx';
 import SelectedElementGamified from './SelectedElementGamified';
+import Badges from './Badges';
+import Leaderboards from './Leaderboards';
 
 const {SELECT, TAP_SWIPE} = SCREENSHOT_INTERACTION_MODE;
 
@@ -164,7 +167,7 @@ const Inspector = (props) => {
       applyClientMethod,
       getSavedActionFramework,
       runKeepAliveLoop,
-      setSessionTime,
+      // setSessionTime,
       storeSessionSettings,
     } = props;
     const curHeight = window.innerHeight;
@@ -181,7 +184,7 @@ const Inspector = (props) => {
     storeSessionSettings();
     getSavedActionFramework();
     runKeepAliveLoop();
-    setSessionTime(Date.now());
+    // setSessionTime(Date.now());
   }, []);
 
   /**
@@ -288,6 +291,55 @@ const Inspector = (props) => {
           onChange={(tab) => selectInspectorTab(tab)}
           items={[
             {
+              label: 'Gamification',
+              key: INSPECTOR_TABS.GAMIFICATION,
+              children: (
+                <div className="action-row">
+                  <div className="action-col">
+                    <Card
+                      title={
+                        <span>
+                          <PlaySquareOutlined /> {'Gamification'}
+                        </span>
+                      }
+                      className={InspectorStyles['interaction-tab-card']}
+                    >
+                      <GamificationInfo quitCurrentSession={quitCurrentSession} {...props} />
+                    </Card>
+                  </div>
+                  <div
+                    id="selectedElementContainerGamification"
+                    className={`${InspectorStyles['interaction-tab-container']} ${InspectorStyles['element-detail-container']} action-col`}
+                  >
+                  <Col>
+                    <Space direction="vertical" size="middle" style={{ display: "flex" }}>
+                      <Card
+                        title={
+                          <span>
+                            <TagOutlined /> {t('selectedElement')}
+                          </span>
+                        }
+                        className={InspectorStyles['selected-element-card']}
+                      >
+                        {selectedElement.path && <SelectedElementGamified {...props} />}
+                        {!selectedElement.path && <i>{t('selectElementInSource')}</i>}
+                      </Card>
+                      <Card
+                        title={<span><TrophyOutlined /> {"Badges and Leaderboards"}</span>}
+                        className={InspectorStyles['selected-element-card']}
+                      >
+                        <Space direction="vertical" style={{display: "flex"}}>
+                          <Badges {...props}/>
+                          <Leaderboards {...props}/>
+                        </Space>
+                      </Card>
+                    </Space>
+                  </Col>
+                  </div>
+                </div>
+              )
+            },
+            {
               label: t('Source'),
               key: INSPECTOR_TABS.SOURCE,
               disabled: !showScreenshot,
@@ -367,42 +419,6 @@ const Inspector = (props) => {
                   <Commands {...props} />
                 </Card>
               ),
-            },
-            {
-              label: 'Gamification',
-              key: INSPECTOR_TABS.GAMIFICATION,
-              children: (
-                <div className="action-row">
-                  <div className="action-col">
-                    <Card
-                      title={
-                        <span>
-                          <PlaySquareOutlined /> {'Gamification'}
-                        </span>
-                      }
-                      className={InspectorStyles['interaction-tab-card']}
-                    >
-                      <GamificationInfo {...props} />
-                    </Card>
-                  </div>
-                  <div
-                    id="selectedElementContainerGamification"
-                    className={`${InspectorStyles['interaction-tab-container']} ${InspectorStyles['element-detail-container']} action-col`}
-                  >
-                    <Card
-                      title={
-                        <span>
-                          <TagOutlined /> {t('selectedElement')}
-                        </span>
-                      }
-                      className={InspectorStyles['selected-element-card']}
-                    >
-                      {selectedElement.path && <SelectedElementGamified {...props} />}
-                      {!selectedElement.path && <i>{t('selectElementInSource')}</i>}
-                    </Card>
-                  </div>
-                </div>
-              )
             },
             {
               label: t('Gestures'),

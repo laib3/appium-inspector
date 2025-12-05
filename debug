@@ -1,9 +1,0 @@
-app/renderer/src/Root.jsx => qui viene definito il Provider (che ingloba l'App di React)
-il Provider è una parte di React-Redux (https://redux.js.org/tutorials/quick-start#provide-the-redux-store-to-react)
-
-per vedere quali sono le azioni del renderer: ripgrep di "ipcRenderer.on()"
-
-Dependencies: 
-- redux / react-redux / react-redux-dom (global state management)
-- i18next (internationalization framework)
-- ant-design (icons; see: https://ant.design/components/icon)
