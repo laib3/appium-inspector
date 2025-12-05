@@ -22,3 +22,5 @@ build.sh
 Session.vim
 report.json
 out
+
+report*
