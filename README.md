@@ -10,3 +10,5 @@ Run `npm install` within the project root directory.
 
 Currently only development mode is supported, even though you may try to build the prod mode by yourself.
 To run the application in development mode: `npm run dev:electron`.
+
+The Appium Inspector documentation is available at <https://appium.github.io/appium-inspector/latest/>.
